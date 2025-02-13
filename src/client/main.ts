@@ -1,4 +1,4 @@
-import "./style.css";
+import "./src/style.css";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div class="p-8 text-center">
