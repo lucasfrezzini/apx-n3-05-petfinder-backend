@@ -1,47 +1,39 @@
-// Desc: Model for the Pet table in the database
+// Desc: Model for the User table in the database
 
 import { DataTypes } from "sequelize";
-import { sequelize } from "./db/index.js";
+import { sequelize } from "../lib/db/index.js";
 
-export const Pet = sequelize.define("Pet", {
+export const User = sequelize.define("User", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  type_pet: {
+  email: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  age: {
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  phone: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  breed: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  sex: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  size: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  distinctive_features: {
+  address: {
     type: DataTypes.STRING,
     allowNull: true,
   },
   lat: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   lng: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.STRING,
     allowNull: true,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 });
