@@ -6,7 +6,7 @@ import { sequelize } from "../lib/db/index.js";
 export const User = sequelize.define("User", {
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -31,9 +31,5 @@ export const User = sequelize.define("User", {
   lng: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  role: {
-    type: DataTypes.STRING,
-    allowNull: false,
   },
 });
