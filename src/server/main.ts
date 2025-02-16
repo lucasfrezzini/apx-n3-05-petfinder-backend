@@ -4,8 +4,10 @@ import "dotenv/config";
 const PORT = parseInt(process.env.PORT as string) || 3000;
 
 import { Pet, User } from "./models/index.js";
+import { Auth } from "./models/authModel.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
+Auth.sync({ force: true });
 User.sync({ force: true });
 Pet.sync({ force: true });
 
