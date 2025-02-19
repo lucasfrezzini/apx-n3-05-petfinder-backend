@@ -1,4 +1,4 @@
-import sampleDog from "../../../../public/dog.jpeg";
+import sampleDog from "/dog.jpeg";
 
 // Definir el componente de Mascotas Perdidas
 export class AppLostPets extends HTMLElement {
