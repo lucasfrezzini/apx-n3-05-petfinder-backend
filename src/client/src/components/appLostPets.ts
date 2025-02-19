@@ -1,3 +1,5 @@
+import sampleDog from "../../../../public/dog.jpeg";
+
 // Definir el componente de Mascotas Perdidas
 export class AppLostPets extends HTMLElement {
   constructor() {
@@ -79,32 +81,32 @@ export class AppLostPets extends HTMLElement {
       {
         name: "Roco",
         location: "Buenos Aires",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
       {
         name: "Luna",
         location: "Córdoba",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
       {
         name: "Toby",
         location: "Rosario",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
       {
         name: "Mia",
         location: "Mendoza",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
       {
         name: "Max",
         location: "La Plata",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
       {
         name: "Bella",
         location: "Mar del Plata",
-        image: "https://place.dog/300/200",
+        image: sampleDog,
       },
     ];
 

@@ -24,6 +24,10 @@ class AppHome extends HTMLElement {
         }
         .home .buttons {
           margin-top: 2rem;
+          display: flex;
+          justify-content: center;
+          // en direccion de columna
+          flex-direction: column;
         }
         .home button {
           padding: 0.75rem 1.5rem;
@@ -43,12 +47,11 @@ class AppHome extends HTMLElement {
         }
       </style>
       <div class="home">
-        <img src="https://via.placeholder.com/400" alt="Imagen de inicio">
-        <h1>Título Principal</h1>
-        <h2>Subtítulo descriptivo</h2>
+        <h1>Bienvenido a Petfinder</h1>
+        <h2>Descripcion de la App</h2>
         <div class="buttons">
-          <button class="primary">Botón 1</button>
-          <button class="secondary">Botón 2</button>
+          <button class="primary">Dar mi ubicacion actual</button>
+          <button class="secondary">Como funciona Pet Finder?</button>
         </div>
       </div>
     `;

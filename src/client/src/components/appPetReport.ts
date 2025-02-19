@@ -1,11 +1,15 @@
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import mapboxgl from "mapbox-gl";
 
+// import * as mapboxCSS from "mapbox-gl/dist/mapbox-gl.css";
+// import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+
 // Definir el componente de Reporte de Mascota
 class AppPetReport extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+
     this.shadowRoot!.innerHTML = `
       <style>
         .pet-report {
@@ -29,7 +33,7 @@ class AppPetReport extends HTMLElement {
           margin-bottom: 0.5rem;
           font-weight: bold;
         }
-        .pet-report input,
+        .pet-report input.inputForm,
         .pet-report select,
         .pet-report textarea {
           width: 100%;
@@ -71,10 +75,10 @@ class AppPetReport extends HTMLElement {
         <h2>Proporciona toda la información de tu mascota</h2>
         <form id="petForm">
           <label for="name">Nombre de la mascota:</label>
-          <input type="text" id="name" name="name" required>
+          <input class="inputForm" type="text" id="name" name="name" required>
 
           <label for="age">Edad:</label>
-          <input type="number" id="age" name="age" required>
+          <input class="inputForm" type="number" id="age" name="age" required>
 
           <label for="size">Tamaño:</label>
           <select id="size" name="size" required>
@@ -90,11 +94,12 @@ class AppPetReport extends HTMLElement {
           </select>
 
           <label for="image">Subir imagen:</label>
-          <input type="file" id="image" name="image" accept="image/*" required>
+          <input class="inputForm" type="file" id="image" name="image" accept="image/*" required>
 
           <label for="location">Ubicación:</label>
           <div class="map-container" id="map"></div>
-          <input type="text" id="location" name="location" placeholder="Buscar ubicación..." required>
+        
+          <input class="inputForm" type="text" id="location" name="location" placeholder="Buscar ubicación..." required>
 
           <button type="submit" class="save">Guardar</button>
           <button type="button" class="found">Reportar como Encontrado</button>
@@ -102,6 +107,9 @@ class AppPetReport extends HTMLElement {
         </form>
       </div>
     `;
+
+    // Inyectar estilos de Mapbox en el Shadow DOM
+    this.injectMapboxStyles();
   }
 
   connectedCallback() {
@@ -128,23 +136,46 @@ class AppPetReport extends HTMLElement {
     });
   }
 
+  injectMapboxStyles() {
+    // Crear un <link> para los estilos de Mapbox GL JS
+    const mapboxStyle = document.createElement("link");
+    mapboxStyle.rel = "stylesheet";
+    mapboxStyle.href =
+      "https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css";
+    this.shadowRoot!.appendChild(mapboxStyle);
+
+    // Crear un <link> para los estilos de Mapbox Geocoder
+    const geocoderStyle = document.createElement("link");
+    geocoderStyle.rel = "stylesheet";
+    geocoderStyle.href =
+      "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.css";
+    this.shadowRoot!.appendChild(geocoderStyle);
+  }
+
   initMapbox() {
     // Cargar Mapbox
+    // mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN; // Reemplaza con tu token de Mapbox
+
     mapboxgl.accessToken =
-      "pk.eyJ1IjoidGFub2RldmVsb3BlciIsImEiOiJjbTYzdXoxY3YxZzFzMmxvdW9oN3EwZ3p6In0.5rPl_irsXaZzKAt1lMg-iw"; // Reemplaza con tu token de Mapbox
+      "pk.eyJ1IjoidGFub2RldmVsb3BlciIsImEiOiJjbTYzdXoxY3YxZzFzMmxvdW9oN3EwZ3p6In0.5rPl_irsXaZzKAt1lMg-iw";
     const map = new mapboxgl.Map({
       container: this.shadowRoot!.getElementById("map") as HTMLElement,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [-58.3816, -34.6037], // Coordenadas de Buenos Aires
       zoom: 12,
     }) as any;
 
     // Añadir geocoder
     const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
+      accessToken: mapboxgl.accessToken!,
       mapboxgl: mapboxgl as any,
-      marker: false,
+      marker: true,
+      reverseGeocode: true,
+      placeholder: "Try: -40, 170",
+      zoom: 5,
     });
+
+    map.addControl(geocoder);
 
     this.shadowRoot!.getElementById("location")!.appendChild(
       geocoder.onAdd(map)
