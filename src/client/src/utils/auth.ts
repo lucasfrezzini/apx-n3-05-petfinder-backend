@@ -16,4 +16,5 @@ export const checkAuth = (route: string) => {
         break;
     }
   }
+  return route;
 };

@@ -1,9 +1,7 @@
 // Definir el componente de Mascotas Reportadas (sin elementos)
 class AppReportedPetsEmpty extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  render() {
+    this.innerHTML = `
       <style>
         .reported-pets-empty {
           padding: 2rem;
@@ -40,18 +38,20 @@ class AppReportedPetsEmpty extends HTMLElement {
       <div class="reported-pets-empty">
         <h1>Mascotas Reportadas</h1>
         <h2>No hay mascotas reportadas por el momento</h2>
-        <img src="https://place.dog/300/200" alt="No hay mascotas reportadas">
+        <img src="public/empty.png" alt="No hay mascotas reportadas"><br>
         <button id="publishButton">Publicar Reporte</button>
       </div>
     `;
-  }
 
-  connectedCallback() {
-    const publishButton = this.shadowRoot!.getElementById("publishButton");
+    const publishButton = this.querySelector("#publishButton");
     publishButton!.addEventListener("click", () => {
       alert("Redirigiendo a Publicar Reporte (simulado)");
       // Aquí puedes agregar la lógica para redirigir a la pantalla de Publicar Reporte
     });
+  }
+
+  connectedCallback() {
+    this.render();
   }
 }
 

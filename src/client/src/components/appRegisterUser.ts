@@ -1,9 +1,7 @@
 // Definir el componente de la pantalla de Registro
 class AppRegisterUser extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  render() {
+    this.innerHTML = `
       <style>
         .register {
           padding: 2rem;
@@ -80,15 +78,17 @@ class AppRegisterUser extends HTMLElement {
         <p class="login-text">¿Ya tienes una cuenta? <a href="#">Iniciar sesión</a></p>
       </div>
     `;
-  }
 
-  connectedCallback() {
-    const form = this.shadowRoot!.getElementById("registerForm");
+    const form = this.querySelector("#registerForm");
     form!.addEventListener("submit", (e) => {
       e.preventDefault();
       alert("Registro exitoso (simulado)");
       // Aquí puedes agregar la lógica de registro
     });
+  }
+
+  connectedCallback() {
+    this.render();
   }
 }
 

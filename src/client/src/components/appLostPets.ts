@@ -2,10 +2,8 @@ import sampleDog from "/dog.jpeg";
 
 // Definir el componente de Mascotas Perdidas
 export class AppLostPets extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  render() {
+    this.innerHTML = `
       <style>
         .lost-pets {
           padding: 2rem;
@@ -124,6 +122,10 @@ export class AppLostPets extends HTMLElement {
       `
       )
       .join("");
+  }
+
+  connectedCallback() {
+    this.render();
   }
 }
 

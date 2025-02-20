@@ -1,9 +1,7 @@
 // Definir el componente de la pantalla Home
 class AppHome extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  render() {
+    this.innerHTML = `
       <style>
         .home {
           text-align: center;
@@ -47,6 +45,7 @@ class AppHome extends HTMLElement {
         }
       </style>
       <div class="home">
+        <img src="/public/home.png" alt="Petfinder Logo" />
         <h1>Bienvenido a Petfinder</h1>
         <h2>Descripcion de la App</h2>
         <div class="buttons">
@@ -55,6 +54,10 @@ class AppHome extends HTMLElement {
         </div>
       </div>
     `;
+  }
+
+  connectedCallback() {
+    this.render();
   }
 }
 

@@ -1,9 +1,7 @@
 // Definir el componente del Header
 class AppHeader extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  render() {
+    this.innerHTML = `
       <style>
         header {
           display: flex;
@@ -45,15 +43,16 @@ class AppHeader extends HTMLElement {
         </div>
       </header>
     `;
-  }
-
-  connectedCallback() {
-    const menuIcon = this.shadowRoot!.getElementById("menuIcon");
-    const menu = this.shadowRoot!.getElementById("menu");
+    const menuIcon = this.querySelector("#menuIcon");
+    const menu = this.querySelector("#menu");
 
     menuIcon!.addEventListener("click", () => {
       menu!.classList.toggle("open");
     });
+  }
+
+  connectedCallback() {
+    this.render();
   }
 }
 

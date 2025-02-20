@@ -6,7 +6,7 @@ import "./src/components/appHeader";
 import "./src/components/appRegisterUser";
 import "./src/components/appReportedPetsEmpty";
 
-import { checkAuth, isAuthenticated } from "./src/utils/auth";
+import { checkAuth } from "./src/utils/auth";
 
 // Definir las rutas de la aplicación
 const routes: { [key: string]: string } = {
@@ -36,7 +36,7 @@ function renderPage(route: keyof typeof routes) {
 function navigateTo(currentRoute: string) {
   let route = currentRoute;
   // Verificar si el usuario está autenticado para reescribir la ruta
-  checkAuth(route);
+  // route = checkAuth(route);
 
   // Actualizar la URL en el navegador
   history.pushState({}, route, window.location.origin + route);
@@ -51,7 +51,7 @@ window.addEventListener("load", () => {
   let route = window.location.pathname;
 
   // Verificar si el usuario está autenticado para reescribir la ruta
-  checkAuth(route);
+  // route = checkAuth(route);
 
   renderPage(route);
 

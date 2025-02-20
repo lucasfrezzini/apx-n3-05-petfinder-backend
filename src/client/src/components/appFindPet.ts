@@ -1,9 +1,11 @@
 // Definir el componente de Reportar Mascota Vista
 class AppFindPet extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot!.innerHTML = `
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
       <style>
         .report-pet {
           padding: 2rem;
@@ -59,10 +61,8 @@ class AppFindPet extends HTMLElement {
         </form>
       </div>
     `;
-  }
 
-  connectedCallback() {
-    const form = this.shadowRoot!.getElementById("reportForm");
+    const form = this.querySelector("#reportForm");
     form!.addEventListener("submit", (e) => {
       e.preventDefault();
       alert("Información enviada (simulado)");
