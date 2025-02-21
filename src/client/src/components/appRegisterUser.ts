@@ -1,3 +1,7 @@
+import { navigateTo } from "../../main";
+import { state } from "../../state";
+import { getFormData } from "../utils/forms";
+
 // Definir el componente de la pantalla de Registro
 class AppRegisterUser extends HTMLElement {
   render() {
@@ -79,11 +83,37 @@ class AppRegisterUser extends HTMLElement {
       </div>
     `;
 
-    const form = this.querySelector("#registerForm");
-    form!.addEventListener("submit", (e) => {
-      e.preventDefault();
-      alert("Registro exitoso (simulado)");
-      // Aquí puedes agregar la lógica de registro
+    const form = this.querySelector("#registerForm")! as HTMLFormElement;
+
+    form.addEventListener("submit", async (event: Event) => {
+      event.preventDefault();
+
+      // Obtener los valores del formulario
+      const formValues = getFormData(form);
+
+      if (formValues.password !== formValues.confirmPassword) {
+        alert("Las contraseñas no coinciden");
+        return;
+      }
+
+      try {
+        // registrar usuario
+        const newUser = await state.signup(formValues);
+        // loguear usuario
+        const { email, password } = formValues;
+        const userToken = await state.login(
+          email as string,
+          password as string
+        );
+        // Guardar el usuario en el estado
+        localStorage.setItem("token", userToken.token);
+        state.setState({ ...state.getState(), user: newUser });
+        // Redirigir al usuario a la pantalla de inicio
+        //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
+        navigateTo("/mascotas-perdidas");
+      } catch (error) {
+        console.error("Submit", error);
+      }
     });
   }
 

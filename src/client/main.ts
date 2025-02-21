@@ -33,10 +33,10 @@ function renderPage(route: keyof typeof routes) {
 }
 
 // Función para manejar la navegación
-function navigateTo(currentRoute: string) {
+export function navigateTo(currentRoute: string) {
   let route = currentRoute;
   // Verificar si el usuario está autenticado para reescribir la ruta
-  // route = checkAuth(route);
+  route = checkAuth(route);
 
   // Actualizar la URL en el navegador
   history.pushState({}, route, window.location.origin + route);
@@ -51,7 +51,7 @@ window.addEventListener("load", () => {
   let route = window.location.pathname;
 
   // Verificar si el usuario está autenticado para reescribir la ruta
-  // route = checkAuth(route);
+  route = checkAuth(route);
 
   renderPage(route);
 

@@ -38,7 +38,6 @@ export class AuthController {
   static readyUserData(userData: User) {
     return {
       email: userData.email,
-      password: userData.password,
       name: userData.name || "",
       phone: userData.phone || "",
       address: userData.address || "",
