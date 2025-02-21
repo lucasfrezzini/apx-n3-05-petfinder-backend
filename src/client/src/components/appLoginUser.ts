@@ -3,7 +3,7 @@ import { state } from "../../state";
 import { getFormData } from "../utils/forms";
 
 // Definir el componente de la pantalla de Registro
-class AppRegisterUser extends HTMLElement {
+class AppLoginUser extends HTMLElement {
   render() {
     this.innerHTML = `
       <style>
@@ -62,11 +62,9 @@ class AppRegisterUser extends HTMLElement {
         }
       </style>
       <div class="register">
-        <h1>Registrarse</h1>
-        <h2>Crea una cuenta para comenzar</h2>
+        <h1>Iniciar Sesión</h1>
+        <h2>Ingresa tus datos para comenzar</h2>
         <form id="registerForm">
-          <label for="name">Nombre:</label>
-          <input type="text" id="name" name="name" required>
 
           <label for="email">Correo electrónico:</label>
           <input type="email" id="email" name="email" required>
@@ -74,12 +72,9 @@ class AppRegisterUser extends HTMLElement {
           <label for="password">Contraseña:</label>
           <input type="password" id="password" name="password" required>
 
-          <label for="confirmPassword">Confirmar contraseña:</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" required>
-
-          <button type="submit">Registrarse</button>
+          <button type="submit">Iniciar sesión</button>
         </form>
-        <p class="login-text">¿Ya tienes una cuenta? <a href="/iniciar-sesion">Iniciar sesión</a></p>
+        <p class="login-text">¿No tienes una cuenta aún? <a href="/registrarse">Crear cuenta</a></p>
       </div>
     `;
 
@@ -91,23 +86,19 @@ class AppRegisterUser extends HTMLElement {
       // Obtener los valores del formulario
       const formValues = getFormData(form);
 
-      if (formValues.password !== formValues.confirmPassword) {
-        alert("Las contraseñas no coinciden");
-        return;
-      }
-
       try {
-        // registrar usuario
-        const newUser = await state.signup(formValues);
         // loguear usuario
         const { email, password } = formValues;
-        const userToken = await state.login(
-          email as string,
-          password as string
-        );
-        // Guardar el usuario en el estado
-        localStorage.setItem("token", userToken.token);
-        state.setState({ ...state.getState(), user: newUser });
+        const userData = await state.login(email as string, password as string);
+
+        // Guardar el token en el estado para tener acceso
+        localStorage.setItem("token", userData.token);
+        // Obtener el id del usuario
+        const id = await state.getUserId(email as string);
+        // Obtener los datos del usuario
+        const user = await state.getUserData(id);
+        // Guardar los datos del usuario en el estado
+        state.setState({ ...state.getState(), user: user });
         // Redirigir al usuario a la pantalla de inicio
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         navigateTo("/mascotas-perdidas");
@@ -123,4 +114,4 @@ class AppRegisterUser extends HTMLElement {
 }
 
 // Registrar los componentes
-customElements.define("app-register-user", AppRegisterUser);
+customElements.define("app-login-user", AppLoginUser);

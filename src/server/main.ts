@@ -8,6 +8,7 @@ import { Pet, User } from "./models/index.js";
 import { Auth } from "./models/authModel.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { authRoutes } from "./routes/authRoutes.js";
+import { userRoutes } from "./routes/userRoutes.js";
 
 // Auth.sync({ force: true });
 // User.sync({ force: true });
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 app.use(errorMiddleware);
 

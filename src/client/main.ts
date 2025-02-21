@@ -4,6 +4,7 @@ import "./src/components/appPetReport";
 import "./src/components/appHome";
 import "./src/components/appHeader";
 import "./src/components/appRegisterUser";
+import "./src/components/appLoginUser";
 import "./src/components/appReportedPetsEmpty";
 
 import { checkAuth } from "./src/utils/auth";
@@ -12,6 +13,7 @@ import { checkAuth } from "./src/utils/auth";
 const routes: { [key: string]: string } = {
   "/": "app-home", // Pantalla de inicio
   "/registrarse": "app-register-user", // Pantalla de registro
+  "/iniciar-sesion": "app-login-user", // Pantalla de inicio de sesión
   "/mascotas-perdidas": "app-lost-pets", // Pantalla de mascotas perdidas
   "/reportar-mascota": "app-find-pet", // Pantalla para reportar mascota vista
   "/reporte-mascota": "app-pet-report", // Pantalla de reporte de mascota (dueño)

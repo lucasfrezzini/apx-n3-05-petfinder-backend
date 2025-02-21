@@ -11,6 +11,8 @@ export const checkAuth = (route: string) => {
         break;
       case "/mascotas-perdidas":
         break;
+      case "/iniciar-sesion":
+        break;
       default:
         route = "/registrarse";
         break;
