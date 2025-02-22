@@ -1,15 +1,6 @@
 // Desc: Auth controller for handling user signup / signin
-
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import {
-  ConflictError,
-  ValidationError,
-  NotFoundError,
-  AuthError,
-} from "../utils/customErrors.js";
+import { NotFoundError } from "../utils/customErrors.js";
 import { User } from "../models/userModel.js";
-import { Auth } from "../models/authModel.js";
 
 interface User {
   email: string;
