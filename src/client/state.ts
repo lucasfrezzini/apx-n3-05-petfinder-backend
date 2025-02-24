@@ -7,12 +7,10 @@ export const state = {
     reports: [],
   },
   getState() {
-    console.log("Getting state");
     if (!this.data.user) {
       const state = localStorage.getItem("state");
       if (state) {
         this.data = JSON.parse(state);
-        console.log("User from local storage:", this.data.user);
       }
     }
     return this.data;

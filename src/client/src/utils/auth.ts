@@ -46,3 +46,9 @@ export const isValidRoute = (route: string) => {
   const allRoutes = [...publicRoutes, ...privateRoutes];
   return allRoutes.includes(route);
 };
+
+export function dispatchAuthChange() {
+  // Disparar un evento personalizado para notificar el cambio de autenticación
+  const event = new CustomEvent("auth-change");
+  window.dispatchEvent(event);
+}

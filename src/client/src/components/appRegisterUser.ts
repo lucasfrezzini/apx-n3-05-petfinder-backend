@@ -1,6 +1,7 @@
 import { navigateTo } from "../../main";
 import { state } from "../../state";
 import { getFormData } from "../utils/forms";
+import { dispatchAuthChange } from "../../src/utils/auth";
 
 // Definir el componente de la pantalla de Registro
 class AppRegisterUser extends HTMLElement {
@@ -110,6 +111,7 @@ class AppRegisterUser extends HTMLElement {
         state.setState({ ...state.getState(), user: newUser.newUser });
         // Redirigir al usuario a la pantalla de inicio
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
+        dispatchAuthChange();
         navigateTo("/mascotas-perdidas");
       } catch (error) {
         console.error("Submit", error);

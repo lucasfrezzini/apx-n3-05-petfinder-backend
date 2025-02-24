@@ -1,4 +1,5 @@
 import { navigateTo } from "../../main";
+import { dispatchAuthChange } from "../../src/utils/auth";
 import { state } from "../../state";
 import { getFormData } from "../utils/forms";
 
@@ -93,7 +94,7 @@ class AppLoginUser extends HTMLElement {
         // Guardar el token en el estado para tener acceso
         localStorage.setItem("token", userData.token);
         // Notificar el cambio de autenticación
-        this.dispatchAuthChange();
+        dispatchAuthChange();
         // Obtener el id del usuario
         const id = await state.getUserId(email as string);
         // Obtener los datos del usuario
@@ -108,12 +109,6 @@ class AppLoginUser extends HTMLElement {
         console.error("Submit", error);
       }
     });
-  }
-
-  dispatchAuthChange() {
-    // Disparar un evento personalizado para notificar el cambio de autenticación
-    const event = new CustomEvent("auth-change");
-    window.dispatchEvent(event);
   }
 
   connectedCallback() {

@@ -1,4 +1,4 @@
-import { isAuthenticated } from "../utils/auth";
+import { isAuthenticated, dispatchAuthChange } from "../utils/auth";
 import { navigateTo } from "../../main";
 
 // Definir el componente del Header
@@ -85,7 +85,8 @@ class AppHeader extends HTMLElement {
       logoutLink.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("token");
-        this.dispatchAuthChange(); // Notificar el cambio de autenticación
+        localStorage.removeItem("state");
+        dispatchAuthChange();
         navigateTo("/");
         this.closeMenu();
       });
@@ -95,12 +96,6 @@ class AppHeader extends HTMLElement {
   closeMenu() {
     const menu = this.querySelector("#menu")!;
     menu.classList.remove("open");
-  }
-
-  dispatchAuthChange() {
-    // Disparar un evento personalizado para notificar el cambio de autenticación
-    const event = new CustomEvent("auth-change");
-    window.dispatchEvent(event);
   }
 
   connectedCallback() {
