@@ -8,7 +8,7 @@ import { tokenValidatorMiddleware } from "../middlewares/tokenValidatorMiddlewar
 // Get all pets reports
 petRoutes.get(
   "/pets",
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const pets = await PetController.findAll();
       res.json(pets);
