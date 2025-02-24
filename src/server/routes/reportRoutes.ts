@@ -1,12 +1,12 @@
-// Desc: Pet routes for the express server
+// Desc: Report routes for the express server
 
 import express, { NextFunction, Request, Response } from "express";
-export const petRoutes = express.Router();
+export const reportRoutes = express.Router();
 import { PetController } from "../controllers/petController.js";
 import { tokenValidatorMiddleware } from "../middlewares/tokenValidatorMiddleware.js";
 
 // Get all pets reports
-petRoutes.get(
+reportRoutes.get(
   "/pets",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -19,7 +19,7 @@ petRoutes.get(
 );
 
 // Post a pet report by id user
-petRoutes.post(
+reportRoutes.post(
   "/pets",
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
