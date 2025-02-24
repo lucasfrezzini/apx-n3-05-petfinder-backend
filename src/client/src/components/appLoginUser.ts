@@ -90,9 +90,10 @@ class AppLoginUser extends HTMLElement {
         // loguear usuario
         const { email, password } = formValues;
         const userData = await state.login(email as string, password as string);
-
         // Guardar el token en el estado para tener acceso
         localStorage.setItem("token", userData.token);
+        // Notificar el cambio de autenticación
+        this.dispatchAuthChange();
         // Obtener el id del usuario
         const id = await state.getUserId(email as string);
         // Obtener los datos del usuario
@@ -103,9 +104,16 @@ class AppLoginUser extends HTMLElement {
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         navigateTo("/mascotas-perdidas");
       } catch (error) {
+        alert("Error al iniciar sesión");
         console.error("Submit", error);
       }
     });
+  }
+
+  dispatchAuthChange() {
+    // Disparar un evento personalizado para notificar el cambio de autenticación
+    const event = new CustomEvent("auth-change");
+    window.dispatchEvent(event);
   }
 
   connectedCallback() {

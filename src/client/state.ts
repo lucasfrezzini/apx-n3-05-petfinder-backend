@@ -7,10 +7,19 @@ export const state = {
     reports: [],
   },
   getState() {
+    console.log("Getting state");
+    if (!this.data.user) {
+      const state = localStorage.getItem("state");
+      if (state) {
+        this.data = JSON.parse(state);
+        console.log("User from local storage:", this.data.user);
+      }
+    }
     return this.data;
   },
   setState(newState: any) {
     this.data = newState;
+    localStorage.setItem("state", JSON.stringify(this.data));
   },
   async signup(data: { [key: string]: string | boolean }) {
     try {
@@ -30,7 +39,7 @@ export const state = {
         throw new Error("Error signing up");
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   },
   async login(email: string, password: string) {
@@ -45,13 +54,13 @@ export const state = {
 
       const responseData = await response.json();
 
-      if (response.ok) {
+      if (response.status === 200) {
         return responseData;
       } else {
         throw new Error("Error logging in");
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   },
   async getUserId(email: string) {
@@ -79,7 +88,7 @@ export const state = {
         throw new Error("Error getting user id");
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   },
   async getUserData(id: number) {
@@ -104,7 +113,66 @@ export const state = {
         throw new Error("Error getting user data");
       }
     } catch (error) {
-      return error;
+      throw error;
+    }
+  },
+  async createNewReport(
+    data: { [key: string]: string | boolean },
+    userId: string
+  ) {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+      console.log("Data:", data);
+      console.log("User id:", userId);
+
+      const response = await fetch(`${API_URL}/pets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ data, userId }),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        console.log("Pet report created:", responseData);
+        return responseData;
+      } else {
+        throw new Error("Error creating new pet report");
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+  async findPets() {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await fetch(`${API_URL}/pets`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        return responseData;
+      } else {
+        throw new Error("Error getting pets");
+      }
+    } catch (error) {
+      throw error;
     }
   },
 };

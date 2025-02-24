@@ -16,19 +16,7 @@ export const Pet = sequelize.define("Pet", {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  breed: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  sex: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   size: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  distinctive_features: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -41,6 +29,14 @@ export const Pet = sequelize.define("Pet", {
     allowNull: false,
   },
   status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  imageURL: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  location: {
     type: DataTypes.STRING,
     allowNull: true,
   },

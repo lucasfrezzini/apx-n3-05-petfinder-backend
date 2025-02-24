@@ -24,6 +24,7 @@ authRoutes.post(
     try {
       const { email, password } = req.body;
       const token = await AuthController.loginUser(email, password);
+      console.log("Token:", typeof token);
       res.status(200).send({ token });
     } catch (error: any) {
       next(error);

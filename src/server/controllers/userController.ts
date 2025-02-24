@@ -48,7 +48,7 @@ export class UserController {
         throw new NotFoundError();
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
@@ -62,7 +62,7 @@ export class UserController {
         throw new NotFoundError();
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 }

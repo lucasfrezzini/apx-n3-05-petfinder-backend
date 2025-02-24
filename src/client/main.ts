@@ -7,7 +7,7 @@ import "./src/components/appRegisterUser";
 import "./src/components/appLoginUser";
 import "./src/components/appReportedPetsEmpty";
 
-import { checkAuth } from "./src/utils/auth";
+import { checkAuth, isValidRoute } from "./src/utils/auth";
 
 // Definir las rutas de la aplicación
 const routes: { [key: string]: string } = {
@@ -20,25 +20,31 @@ const routes: { [key: string]: string } = {
   "/mascotas-reportadas": "app-reported-pets-empty", // Pantalla de mascotas reportadas (vacía)
 };
 
-// Función para renderizar la página según la ruta
-function renderPage(route: keyof typeof routes) {
-  const mainContainer = document.getElementById("main");
-  const component = routes[route];
+// Renderizar la página correspondiente
+export const renderPage = (route: string) => {
+  const mainContainer = document.getElementById("main")!;
 
-  if (component) {
-    // Limpiar el contenedor principal
-    mainContainer!.innerHTML = `<${component}></${component}>`;
-  } else {
-    // Página no encontrada (404)
-    mainContainer!.innerHTML = `<h1>404 - Página no encontrada</h1>`;
-  }
-}
+  // Mostrar un loader mientras se carga la página
+  mainContainer.innerHTML = `<div class="loader">Cargando...</div>`;
+
+  // Simular una carga asíncrona (puedes reemplazar esto con la lógica real)
+  setTimeout(() => {
+    const component = routes[route] || "app-not-found"; // Componente por defecto si la ruta no existe
+    mainContainer.innerHTML = `<${component}></${component}>`;
+  }, 500); // Simular un retraso de 500ms
+};
 
 // Función para manejar la navegación
 export function navigateTo(currentRoute: string) {
   let route = currentRoute;
-  // Verificar si el usuario está autenticado para reescribir la ruta
+
+  // Verificar si la ruta es válida y si el usuario está autenticado
   route = checkAuth(route);
+
+  // Si la ruta no es válida, redirigir a la página de inicio
+  if (!isValidRoute(route)) {
+    route = "/";
+  }
 
   // Actualizar la URL en el navegador
   history.pushState({}, route, window.location.origin + route);
@@ -59,9 +65,12 @@ window.addEventListener("load", () => {
 
   // Escuchar clics en los enlaces de la aplicación
   document.body.addEventListener("click", (e) => {
-    if ((e.target as Element).matches("[data-link]")) {
+    const target = e.target as Element;
+    const link = target.closest("[data-link]"); // Usar closest para manejar elementos anidados
+
+    if (link) {
       e.preventDefault();
-      const route = (e.target as Element).getAttribute("href");
+      const route = link.getAttribute("href");
       navigateTo(route!);
     }
   });

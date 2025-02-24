@@ -57,6 +57,7 @@ export class AuthController {
       ) {
         return new ValidationError();
       }
+
       const readyUserData = AuthController.readyUserData(userData);
 
       // Create the user if it doesn't exist
@@ -78,7 +79,7 @@ export class AuthController {
         return new ConflictError();
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
@@ -93,14 +94,18 @@ export class AuthController {
       const user = await Auth.findOne({
         where: { email: email },
       });
+      console.log("User:", user);
 
       if (!user) {
+        console.log("User not found");
         throw new NotFoundError();
       }
-
+      console.log("User found");
       // Check if the password matches the hash
       const userPassword: string = user.get("password") as string;
       const isValid = await bcrypt.compare(password, userPassword);
+
+      console.log("isValid:", isValid);
 
       // Generate a new token and return it
       if (isValid) {
@@ -112,13 +117,12 @@ export class AuthController {
           SECRET_TEXT,
           { expiresIn: "1h" }
         );
-
         return token;
       } else {
         throw new AuthError("Credenciales inválidas");
       }
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 }

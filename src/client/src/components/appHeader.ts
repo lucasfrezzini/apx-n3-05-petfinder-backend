@@ -1,6 +1,10 @@
+import { isAuthenticated } from "../utils/auth";
+import { navigateTo } from "../../main";
+
 // Definir el componente del Header
 class AppHeader extends HTMLElement {
   render() {
+    const isAuth = isAuthenticated();
     this.innerHTML = `
       <style>
         header {
@@ -34,25 +38,79 @@ class AppHeader extends HTMLElement {
         }
       </style>
       <header>
-        <div class="logo">Logo</div>
+        <div class="logo">Petsitos</div>
         <div class="menu-icon" id="menuIcon">☰</div>
         <div class="menu" id="menu">
-          <a href="#">Link 1</a>
-          <a href="#">Link 2</a>
-          <a href="#">Link 3</a>
+          ${isAuth ? this.getAuthLinks() : this.getNonAuthLinks()}
         </div>
       </header>
     `;
-    const menuIcon = this.querySelector("#menuIcon");
-    const menu = this.querySelector("#menu");
+  }
 
-    menuIcon!.addEventListener("click", () => {
-      menu!.classList.toggle("open");
+  getAuthLinks() {
+    return `
+      <a href="/mascotas-perdidas" data-link>Mascotas Perdidas</a>
+      <a href="/reportar-mascota" data-link>Reportar Mascota</a>
+      <a href="/cerrar-sesion" data-link>Cerrar Sesión</a>
+    `;
+  }
+
+  getNonAuthLinks() {
+    return `
+      <a href="/" data-link>Inicio</a>
+      <a href="/iniciar-sesion" data-link>Iniciar Sesión</a>
+      <a href="/registrarse" data-link>Registrarse</a>
+    `;
+  }
+
+  setupEventListeners() {
+    const menuIcon = this.querySelector("#menuIcon")!;
+    const menu = this.querySelector("#menu")!;
+
+    menuIcon.addEventListener("click", () => {
+      menu.classList.toggle("open");
     });
+
+    // Cerrar el menú al hacer clic en un enlace
+    const links = this.querySelectorAll(".menu a");
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        this.closeMenu();
+      });
+    });
+
+    // Cerrar sesión
+    const logoutLink = this.querySelector('a[href="/cerrar-sesion"]');
+    if (logoutLink) {
+      logoutLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        this.dispatchAuthChange(); // Notificar el cambio de autenticación
+        navigateTo("/");
+        this.closeMenu();
+      });
+    }
+  }
+
+  closeMenu() {
+    const menu = this.querySelector("#menu")!;
+    menu.classList.remove("open");
+  }
+
+  dispatchAuthChange() {
+    // Disparar un evento personalizado para notificar el cambio de autenticación
+    const event = new CustomEvent("auth-change");
+    window.dispatchEvent(event);
   }
 
   connectedCallback() {
     this.render();
+    this.setupEventListeners();
+    // Escuchar cambios en el estado de autenticación
+    window.addEventListener("auth-change", () => {
+      this.render();
+      this.setupEventListeners();
+    });
   }
 }
 

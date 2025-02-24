@@ -1,5 +1,4 @@
-import sampleDog from "/dog.jpeg";
-
+import { state } from "../../state";
 // Definir el componente de Mascotas Perdidas
 export class AppLostPets extends HTMLElement {
   render() {
@@ -68,51 +67,19 @@ export class AppLostPets extends HTMLElement {
         <h1>Mascotas Perdidas</h1>
         <h2>Ayuda a encontrar a estas mascotas</h2>
         <div class="cards">
-          ${this.generateCards()}
         </div>
       </div>
     `;
   }
 
-  generateCards() {
-    const pets = [
-      {
-        name: "Roco",
-        location: "Buenos Aires",
-        image: sampleDog,
-      },
-      {
-        name: "Luna",
-        location: "Córdoba",
-        image: sampleDog,
-      },
-      {
-        name: "Toby",
-        location: "Rosario",
-        image: sampleDog,
-      },
-      {
-        name: "Mia",
-        location: "Mendoza",
-        image: sampleDog,
-      },
-      {
-        name: "Max",
-        location: "La Plata",
-        image: sampleDog,
-      },
-      {
-        name: "Bella",
-        location: "Mar del Plata",
-        image: sampleDog,
-      },
-    ];
+  async generateCards() {
+    const pets = (await state.findPets()) as any;
 
-    return pets
+    const cards = pets
       .map(
-        (pet) => `
+        (pet: any) => `
         <div class="card">
-          <img src="${pet.image}" alt="${pet.name}">
+          <img src="${pet.imageURL}" alt="${pet.name}">
           <h3>${pet.name}</h3>
           <p>Se perdió en ${pet.location}</p>
           <button>
@@ -122,10 +89,13 @@ export class AppLostPets extends HTMLElement {
       `
       )
       .join("");
+
+    this.querySelector(".cards")!.innerHTML = cards;
   }
 
   connectedCallback() {
     this.render();
+    this.generateCards();
   }
 }
 

@@ -107,7 +107,7 @@ class AppRegisterUser extends HTMLElement {
         );
         // Guardar el usuario en el estado
         localStorage.setItem("token", userToken.token);
-        state.setState({ ...state.getState(), user: newUser });
+        state.setState({ ...state.getState(), user: newUser.newUser });
         // Redirigir al usuario a la pantalla de inicio
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         navigateTo("/mascotas-perdidas");

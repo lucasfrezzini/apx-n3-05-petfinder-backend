@@ -1,22 +1,48 @@
-// Check if the user is authenticated
+// Propósito: Funciones de autenticación y autorización
+
+// Definir rutas públicas y privadas
+const publicRoutes = ["/", "/iniciar-sesion", "/registrarse"];
+const privateRoutes = [
+  "/mascotas-perdidas",
+  "/reportar-mascota",
+  "/reporte-mascota",
+  "/mascotas-reportadas",
+];
+
+// Verificar si el usuario está autenticado
 export const isAuthenticated = () => {
-  return localStorage.getItem("token") !== null;
+  const token = localStorage.getItem("token");
+
+  if (!token) return false;
+
+  const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar el payload del JWT
+  if (payload.exp && payload.exp < Date.now() / 1000) {
+    localStorage.removeItem("token"); // Eliminar el token expirado
+    return false; // Token expirado
+  }
+
+  return true;
 };
 
-// Return to the login page if the user is not authenticated
+// Verificar autenticación y redirigir si es necesario
 export const checkAuth = (route: string) => {
-  if (!isAuthenticated()) {
-    switch (route) {
-      case "/":
-        break;
-      case "/mascotas-perdidas":
-        break;
-      case "/iniciar-sesion":
-        break;
-      default:
-        route = "/registrarse";
-        break;
-    }
+  const isAuth = isAuthenticated();
+
+  // Si la ruta es privada y el usuario no está autenticado, redirigir a /iniciar-sesion
+  if (privateRoutes.includes(route) && !isAuth) {
+    return "/iniciar-sesion";
   }
+
+  // Si la ruta es pública y el usuario está autenticado, redirigir a /mascotas-perdidas (o una ruta por defecto)
+  // if (publicRoutes.includes(route) && isAuth && route !== "/") {
+  //   return "/mascotas-perdidas";
+  // }
+
   return route;
+};
+
+// Verificar si la ruta es válida
+export const isValidRoute = (route: string) => {
+  const allRoutes = [...publicRoutes, ...privateRoutes];
+  return allRoutes.includes(route);
 };
