@@ -3,8 +3,10 @@
 
 import { User } from "./userModel.js";
 import { Pet } from "./petModel.js";
+import { Report } from "./reportModel.js";
 
 User.hasMany(Pet);
+Pet.hasMany(Report);
 Pet.belongsTo(User);
 
-export { User, Pet };
+export { User, Pet, Report };
