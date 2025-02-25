@@ -24,7 +24,6 @@ petRoutes.post(
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("Request body:", req.body);
       const { userId, data } = req.body;
       const petReport = await PetController.createPetReport(
         data,

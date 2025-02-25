@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { Pet } from "../models/petModel.js";
+import { Pet, User } from "../models/index.js";
 import "dotenv/config";
 
 export class PetController {
@@ -25,6 +25,7 @@ export class PetController {
   public static async findAll() {
     return await Pet.findAll();
   }
+
   public static async createPetReport(
     data: { [key: string]: string | boolean },
     userId: number
@@ -33,8 +34,14 @@ export class PetController {
       const dataURI = data["imageDataURI"] as string;
       const uploadResultURL = await this.uploadProfilePic(dataURI);
       if (!uploadResultURL) {
-        return new Error("Failed to upload image");
+        throw new Error("Failed to upload image");
       }
+      console.log("Image uploaded:", uploadResultURL);
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      console.log("User found:", user);
       const report = await Pet.create({
         name: data.name,
         type_pet: data.type_pet,

@@ -53,6 +53,7 @@ export const state = {
       const responseData = await response.json();
 
       if (response.status === 200) {
+        // Devuelvo un string token
         return responseData;
       } else {
         throw new Error("Error logging in");
@@ -81,7 +82,7 @@ export const state = {
       const responseData = await response.json();
 
       if (response.ok) {
-        return responseData.id;
+        return responseData;
       } else {
         throw new Error("Error getting user id");
       }
@@ -124,26 +125,25 @@ export const state = {
       if (!token) {
         throw new Error("No token found");
       }
-      console.log("Data:", data);
       console.log("User id:", userId);
 
-      const response = await fetch(`${API_URL}/pets`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ data, userId }),
-      });
+      // const response = await fetch(`${API_URL}/pets`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   body: JSON.stringify({ data, userId }),
+      // });
 
-      const responseData = await response.json();
+      // const responseData = await response.json();
 
-      if (response.ok) {
-        console.log("Pet report created:", responseData);
-        return responseData;
-      } else {
-        throw new Error("Error creating new pet report");
-      }
+      // if (response.ok) {
+      //   console.log("Pet report created:", responseData);
+      //   return responseData;
+      // } else {
+      //   throw new Error("Error creating new pet report");
+      // }
     } catch (error) {
       throw error;
     }

@@ -102,19 +102,17 @@ class AppRegisterUser extends HTMLElement {
         const newUser = await state.signup(formValues);
         // loguear usuario
         const { email, password } = formValues;
-        const userToken = await state.login(
-          email as string,
-          password as string
-        );
+        const newToken = await state.login(email as string, password as string);
         // Guardar el usuario en el estado
-        localStorage.setItem("token", userToken.token);
-        state.setState({ ...state.getState(), user: newUser.newUser });
+        localStorage.setItem("token", newToken);
+        state.setState({ ...state.getState(), user: newUser });
         // Redirigir al usuario a la pantalla de inicio
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         dispatchAuthChange();
         navigateTo("/mascotas-perdidas");
       } catch (error) {
         console.error("Submit", error);
+        alert("Error al registrarse");
       }
     });
   }

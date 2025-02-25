@@ -10,9 +10,10 @@ authRoutes.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const newUser = await AuthController.signupUser(req.body);
-      res.status(201).send({ newUser, message: "User created successfully" });
+
+      res.status(201).send(newUser);
     } catch (error: any) {
-      return next(error);
+      next(error);
     }
   }
 );
@@ -24,8 +25,7 @@ authRoutes.post(
     try {
       const { email, password } = req.body;
       const token = await AuthController.loginUser(email, password);
-      console.log("Token:", typeof token);
-      res.status(200).send({ token });
+      res.status(200).json(token);
     } catch (error: any) {
       next(error);
     }

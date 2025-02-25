@@ -17,7 +17,7 @@ userRoutes.get(
         throw new ValidationError();
       }
       const user = await UserController.userData(userId);
-      res.status(200).json({ user });
+      res.status(200).json(user);
     } catch (error: any) {
       next(error);
     }
@@ -32,7 +32,7 @@ userRoutes.post(
     try {
       const email = req.body.email;
       const id = await UserController.getUserId(email);
-      res.status(200).json({ id });
+      res.status(200).json(id);
     } catch (error: any) {
       next(error);
     }

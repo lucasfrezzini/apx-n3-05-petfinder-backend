@@ -118,7 +118,7 @@ class AppPetReport extends HTMLElement {
     form!.addEventListener("submit", (e) => {
       e.preventDefault();
       const currentState = state.getState();
-      console.log("Estado actual user:", currentState.user);
+      console.log("Estado actual user:", currentState);
       const { id } = currentState.user!;
 
       // Obtener los valores del formulario

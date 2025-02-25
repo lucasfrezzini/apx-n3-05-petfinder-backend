@@ -8,7 +8,7 @@ import {
   NotFoundError,
   AuthError,
 } from "../utils/customErrors.js";
-import { User } from "../models/userModel.js";
+import { User } from "../models/index.js";
 import { Auth } from "../models/authModel.js";
 
 interface User {
@@ -55,7 +55,7 @@ export class AuthController {
           userData.password
         )
       ) {
-        return new ValidationError();
+        throw new ValidationError();
       }
 
       const readyUserData = AuthController.readyUserData(userData);
@@ -74,9 +74,9 @@ export class AuthController {
           user_id: user.get("id"), // user.id,
         });
 
-        return user;
+        return user.dataValues;
       } else {
-        return new ConflictError();
+        throw new ConflictError();
       }
     } catch (error) {
       throw error;
@@ -87,7 +87,7 @@ export class AuthController {
   public static async loginUser(email: string, password: string) {
     try {
       if (!AuthController.validateUserRequiredData(email, password)) {
-        return new ValidationError();
+        throw new ValidationError();
       }
 
       // Find the user from the data

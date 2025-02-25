@@ -1,6 +1,6 @@
 // Desc: Auth controller for handling user signup / signin
 import { NotFoundError } from "../utils/customErrors.js";
-import { User } from "../models/userModel.js";
+import { User } from "../models/index.js";
 
 interface User {
   email: string;
@@ -41,7 +41,6 @@ export class UserController {
   public static async userData(userId: number) {
     try {
       const user = await User.findByPk(userId);
-      console.log("userBack", user);
       if (user) {
         return user;
       } else {

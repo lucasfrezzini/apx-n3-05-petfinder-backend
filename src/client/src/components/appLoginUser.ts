@@ -90,17 +90,21 @@ class AppLoginUser extends HTMLElement {
       try {
         // loguear usuario
         const { email, password } = formValues;
-        const userData = await state.login(email as string, password as string);
+        const newToken = await state.login(email as string, password as string);
+        console.log("campo userData:", newToken);
         // Guardar el token en el estado para tener acceso
-        localStorage.setItem("token", userData.token);
+        localStorage.setItem("token", newToken);
         // Notificar el cambio de autenticación
         dispatchAuthChange();
         // Obtener el id del usuario
         const id = await state.getUserId(email as string);
+        console.log("campo ID:", id);
         // Obtener los datos del usuario
         const user = await state.getUserData(id);
+        console.log("campo User:", user);
         // Guardar los datos del usuario en el estado
-        state.setState({ ...state.getState(), user: user });
+        console.log({ ...state.getState(), user });
+        state.setState({ ...state.getState(), user });
         // Redirigir al usuario a la pantalla de inicio
         //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         navigateTo("/mascotas-perdidas");

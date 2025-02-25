@@ -5,8 +5,8 @@ import { User } from "./userModel.js";
 import { Pet } from "./petModel.js";
 import { Report } from "./reportModel.js";
 
-User.hasMany(Pet);
-Pet.hasMany(Report);
-Pet.belongsTo(User);
+User.hasMany(Pet, { foreignKey: "UserId" });
+Pet.hasMany(Report, { foreignKey: "PetId" });
+Pet.belongsTo(User, { foreignKey: "UserId" });
 
 export { User, Pet, Report };
