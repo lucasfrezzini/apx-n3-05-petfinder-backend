@@ -3,8 +3,9 @@ const API_URL = "http://localhost:3000/api";
 export const state = {
   data: {
     user: null,
-    pets: [],
+    pets: [] as Element[],
     reports: [],
+    seenPet: {},
   },
   getState() {
     if (!this.data.user) {
@@ -148,17 +149,7 @@ export const state = {
   },
   async findPets() {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No token found");
-      }
-
-      const response = await fetch(`${API_URL}/pets`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(`${API_URL}/pets`);
 
       const responseData = await response.json();
 
