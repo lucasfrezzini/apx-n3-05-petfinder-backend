@@ -4,8 +4,10 @@ export const state = {
   data: {
     user: null,
     pets: [] as Element[],
-    reports: [],
-    seenPet: {},
+    reports: [] as Element[],
+    seenPet: {
+      id: null as string | null,
+    },
   },
   getState() {
     if (!this.data.user) {

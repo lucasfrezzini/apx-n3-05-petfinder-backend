@@ -84,8 +84,13 @@ class AppRegisterUser extends HTMLElement {
       </div>
     `;
 
-    const form = this.querySelector("#registerForm")! as HTMLFormElement;
+    const registerLink = this.querySelector('a[href="/iniciar-sesion"]')!;
+    registerLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigateTo("/iniciar-sesion");
+    });
 
+    const form = this.querySelector("#registerForm")! as HTMLFormElement;
     form.addEventListener("submit", async (event: Event) => {
       event.preventDefault();
 
@@ -106,10 +111,14 @@ class AppRegisterUser extends HTMLElement {
         // Guardar el usuario en el estado
         localStorage.setItem("token", newToken);
         state.setState({ ...state.getState(), user: newUser });
-        // Redirigir al usuario a la pantalla de inicio
-        //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
         dispatchAuthChange();
-        navigateTo("/mascotas-perdidas");
+        // Redirigir al usuario a la pantalla de inicio o reportes si correpsponde
+        const currentState = state.getState();
+        if (currentState.seenPet.id) {
+          navigateTo(`/avistaje-mascota`);
+        } else {
+          navigateTo("/mascotas-perdidas");
+        }
       } catch (error) {
         console.error("Submit", error);
         alert("Error al registrarse");

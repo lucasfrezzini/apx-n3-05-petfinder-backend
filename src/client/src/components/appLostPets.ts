@@ -1,3 +1,4 @@
+import { navigateTo } from "../../main";
 import { state } from "../../state";
 // Definir el componente de Mascotas Perdidas
 export class AppLostPets extends HTMLElement {
@@ -74,11 +75,10 @@ export class AppLostPets extends HTMLElement {
 
   async generateCards() {
     const pets = (await state.findPets()) as any;
-
     const cards = pets
       .map(
         (pet: any) => `
-        <div class="card">
+        <div class="card" id="${pet.id}">
           <img src="${pet.imageURL}" alt="${pet.name}">
           <h3>${pet.name}</h3>
           <p>Se perdió en ${pet.location}</p>
@@ -93,9 +93,22 @@ export class AppLostPets extends HTMLElement {
     this.querySelector(".cards")!.innerHTML = cards;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     this.render();
-    this.generateCards();
+    await this.generateCards();
+
+    const cards = this.querySelectorAll(".card");
+
+    cards.forEach((pet) => {
+      const button = pet.querySelector("button");
+      button!.addEventListener("click", (e) => {
+        e.preventDefault();
+        const currentState = state.getState();
+        currentState.seenPet.id = pet.id;
+        console.log(currentState);
+        navigateTo(`/avistaje-mascota`);
+      });
+    });
   }
 }
 

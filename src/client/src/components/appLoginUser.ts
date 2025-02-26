@@ -79,8 +79,13 @@ class AppLoginUser extends HTMLElement {
       </div>
     `;
 
-    const form = this.querySelector("#registerForm")! as HTMLFormElement;
+    const registerLink = this.querySelector('a[href="/registrarse"]')!;
+    registerLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigateTo("/registrarse");
+    });
 
+    const form = this.querySelector("#registerForm")! as HTMLFormElement;
     form.addEventListener("submit", async (event: Event) => {
       event.preventDefault();
 
@@ -91,23 +96,24 @@ class AppLoginUser extends HTMLElement {
         // loguear usuario
         const { email, password } = formValues;
         const newToken = await state.login(email as string, password as string);
-        console.log("campo userData:", newToken);
         // Guardar el token en el estado para tener acceso
         localStorage.setItem("token", newToken);
         // Notificar el cambio de autenticación
         dispatchAuthChange();
         // Obtener el id del usuario
         const id = await state.getUserId(email as string);
-        console.log("campo ID:", id);
         // Obtener los datos del usuario
         const user = await state.getUserData(id);
-        console.log("campo User:", user);
         // Guardar los datos del usuario en el estado
-        console.log({ ...state.getState(), user });
         state.setState({ ...state.getState(), user });
-        // Redirigir al usuario a la pantalla de inicio
-        //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
-        navigateTo("/mascotas-perdidas");
+
+        // Redirigir al usuario a la pantalla de inicio o reportes si correpsponde
+        const currentState = state.getState();
+        if (currentState.seenPet.id) {
+          navigateTo(`/avistaje-mascota`);
+        } else {
+          navigateTo("/mascotas-perdidas");
+        }
       } catch (error) {
         alert("Error al iniciar sesión");
         console.error("Submit", error);
