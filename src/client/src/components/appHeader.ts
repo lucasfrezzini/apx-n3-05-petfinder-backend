@@ -51,6 +51,7 @@ class AppHeader extends HTMLElement {
     return `
       <a href="/mascotas-perdidas" data-link>Mascotas Perdidas</a>
       <a href="/reportar-mascota" data-link>Reportar Mascota</a>
+      <a href="/mis-datos" data-link>Mis datos</a>
       <a href="/cerrar-sesion" data-link>Cerrar Sesión</a>
     `;
   }
@@ -81,15 +82,21 @@ class AppHeader extends HTMLElement {
 
     // Cerrar sesión
     const logoutLink = this.querySelector('a[href="/cerrar-sesion"]');
+    console.log(logoutLink);
+
     if (logoutLink) {
       logoutLink.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("token");
         localStorage.removeItem("state");
         dispatchAuthChange();
+        console.log("entre al cerrar sesion");
+
         navigateTo("/");
         this.closeMenu();
       });
+    } else {
+      console.log("no hay");
     }
   }
 

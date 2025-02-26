@@ -1,12 +1,21 @@
 // Propósito: Funciones de autenticación y autorización
 
 // Definir rutas públicas y privadas
-const publicRoutes = ["/", "/iniciar-sesion", "/registrarse"];
-const privateRoutes = [
+const publicRoutes = [
+  "/",
+  "/iniciar-sesion",
+  "/registrarse",
   "/mascotas-perdidas",
+];
+const privateRoutes = [
   "/reportar-mascota",
   "/reporte-mascota",
   "/mascotas-reportadas",
+  "/avistaje-mascota",
+  "/mis-datos",
+  "/modify-data",
+  "/modify-pass",
+  "/cerrar-sesion",
 ];
 
 // Verificar si el usuario está autenticado

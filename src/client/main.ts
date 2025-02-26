@@ -1,11 +1,14 @@
 import "./src/components/appLostPets";
-import "./src/components/appFindPet";
+import "./src/components/appSeenReportPet";
 import "./src/components/appPetReport";
 import "./src/components/appHome";
 import "./src/components/appHeader";
 import "./src/components/appRegisterUser";
 import "./src/components/appLoginUser";
 import "./src/components/appReportedPetsEmpty";
+import "./src/components/appModifyUserData";
+import "./src/components/appMyData";
+import "./src/components/appModifyUserPass";
 
 import { checkAuth, isValidRoute } from "./src/utils/auth";
 
@@ -15,9 +18,12 @@ const routes: { [key: string]: string } = {
   "/registrarse": "app-register-user", // Pantalla de registro
   "/iniciar-sesion": "app-login-user", // Pantalla de inicio de sesión
   "/mascotas-perdidas": "app-lost-pets", // Pantalla de mascotas perdidas
-  "/reportar-mascota": "app-find-pet", // Pantalla para reportar mascota vista
-  "/reporte-mascota": "app-pet-report", // Pantalla de reporte de mascota (dueño)
+  "/avistaje-mascota": "app-seen-pet", // Pantalla para reportar mascota vista
+  "/reportar-mascota": "app-pet-report", // Pantalla de reporte de mascota (dueño)
   "/mascotas-reportadas": "app-reported-pets-empty", // Pantalla de mascotas reportadas (vacía)
+  "/mis-datos": "app-my-data",
+  "/modify-data": "app-modify-user",
+  "/modify-pass": "app-modify-pass",
 };
 
 // Renderizar la página correspondiente
