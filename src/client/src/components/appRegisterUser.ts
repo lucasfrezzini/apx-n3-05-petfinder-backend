@@ -114,8 +114,8 @@ class AppRegisterUser extends HTMLElement {
         dispatchAuthChange();
         // Redirigir al usuario a la pantalla de inicio o reportes si correpsponde
         const currentState = state.getState();
-        if (currentState.seenPet.id) {
-          navigateTo(`/avistaje-mascota`);
+        if (currentState.goTo) {
+          navigateTo(currentState.goTo);
         } else {
           navigateTo("/mascotas-perdidas");
         }
