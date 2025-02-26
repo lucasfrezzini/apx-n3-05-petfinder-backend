@@ -82,7 +82,6 @@ class AppHeader extends HTMLElement {
 
     // Cerrar sesión
     const logoutLink = this.querySelector('a[href="/cerrar-sesion"]');
-    console.log(logoutLink);
 
     if (logoutLink) {
       logoutLink.addEventListener("click", (e) => {
@@ -90,13 +89,10 @@ class AppHeader extends HTMLElement {
         localStorage.removeItem("token");
         localStorage.removeItem("state");
         dispatchAuthChange();
-        console.log("entre al cerrar sesion");
 
         navigateTo("/");
         this.closeMenu();
       });
-    } else {
-      console.log("no hay");
     }
   }
 
