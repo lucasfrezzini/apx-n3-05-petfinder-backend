@@ -1,3 +1,5 @@
+import { hasToken } from "./src/utils/auth";
+import { fetchApi } from "./src/utils/api";
 const API_URL = "http://localhost:3000/api";
 
 export const state = {
@@ -25,96 +27,58 @@ export const state = {
   },
   async signup(data: { [key: string]: string | boolean }) {
     try {
-      const response = await fetch(`${API_URL}/auth`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error signing up");
-      }
+      return await fetchApi(
+        "auth",
+        "POST",
+        data,
+        undefined,
+        "Error signing up"
+      );
     } catch (error) {
       throw error;
     }
   },
   async login(email: string, password: string) {
     try {
-      const response = await fetch(`${API_URL}/auth/token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const responseData = await response.json();
-
-      if (response.status === 200) {
-        // Devuelvo un string token
-        return responseData;
-      } else {
-        throw new Error("Error logging in");
-      }
+      return await fetchApi(
+        "auth/token",
+        "POST",
+        { email, password },
+        undefined,
+        "Error logging in"
+      );
     } catch (error) {
       throw error;
     }
   },
   async getUserId(email: string) {
     try {
-      const token = localStorage.getItem("token");
+      const token = hasToken();
 
-      if (!token) {
-        throw new Error("No token found");
-      }
-
-      const response = await fetch(`${API_URL}/user/id`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error getting user id");
-      }
+      return await fetchApi(
+        "user/id",
+        "POST",
+        { email },
+        token as string,
+        "Error getting user id"
+      );
     } catch (error) {
       throw error;
     }
   },
   async getUserData(id: number) {
     try {
-      const token = localStorage.getItem("token");
+      const token = hasToken();
 
-      if (!token) {
-        throw new Error("No token found");
-      }
+      const endpoint = `user/${id}`;
 
-      const response = await fetch(`${API_URL}/user/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error getting user data");
-      }
+      return await fetchApi(
+        endpoint,
+        "GET",
+        undefined,
+        token as string,
+        "Error getting user data"
+      );
     } catch (error) {
       throw error;
     }
@@ -124,72 +88,58 @@ export const state = {
     userId: string
   ) {
     try {
-      const token = localStorage.getItem("token");
+      const token = hasToken();
 
-      if (!token) {
-        throw new Error("No token found");
-      }
-
-      const response = await fetch(`${API_URL}/pets`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ data, userId }),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error creating new pet report");
-      }
+      return await fetchApi(
+        "/pets",
+        "POST",
+        { data, userId },
+        token as string,
+        "Error creating new pet report"
+      );
     } catch (error) {
       throw error;
     }
   },
   async findPets() {
     try {
-      const response = await fetch(`${API_URL}/pets`);
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error getting pets");
-      }
+      return await fetchApi(
+        "pets",
+        "GET",
+        undefined,
+        undefined,
+        "Error getting pets"
+      );
     } catch (error) {
       throw error;
     }
   },
   async updateDataUser(data: { [key: string]: string | boolean }) {
     try {
-      const token = localStorage.getItem("token");
+      const token = hasToken();
 
-      if (!token) {
-        throw new Error("No token found");
-      }
-      console.log({ ...data, id: this.data.user!.id });
+      return await fetchApi(
+        "user/data",
+        "PUT",
+        { ...data, id: this.data.user!.id },
+        token as string,
+        "Error updating user information"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updatePassword(data: { [key: string]: string | boolean }) {
+    try {
+      const token = hasToken();
 
-      const response = await fetch(`${API_URL}/user/update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ...data, id: this.data.user!.id }),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        return responseData;
-      } else {
-        throw new Error("Error updating user information");
-      }
+      return await fetchApi(
+        "user/pass",
+        "PUT",
+        { ...data, id: this.data.user!.id },
+        token as string,
+        "Error updating user password"
+      );
     } catch (error) {
       throw error;
     }
