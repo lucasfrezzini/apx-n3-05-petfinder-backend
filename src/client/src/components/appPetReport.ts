@@ -115,16 +115,20 @@ class AppPetReport extends HTMLElement {
     initMap();
 
     const form = this.querySelector("#petForm") as HTMLFormElement;
-    form!.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const currentState = state.getState();
-      console.log("Estado actual user:", currentState);
-      const { id } = currentState.user!;
+    form!.addEventListener("submit", async (e) => {
+      try {
+        e.preventDefault();
+        const currentState = state.getState();
+        const { id } = currentState.user!;
 
-      // Obtener los valores del formulario
-      const formValues = getFormData(form);
-      state.createNewReport(formValues, id);
-      console.log("Valores del formulario:", formValues);
+        // Obtener los valores del formulario
+        const formValues = getFormData(form);
+        await state.createNewReport(formValues, id);
+        alert("Reporte credo con exito");
+      } catch (error) {
+        alert("Error al crear el report");
+        console.error("Submit", error);
+      }
     });
 
     const foundButton = this.querySelector(".found");
