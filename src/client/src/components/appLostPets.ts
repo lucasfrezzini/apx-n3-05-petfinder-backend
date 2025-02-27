@@ -74,7 +74,15 @@ export class AppLostPets extends HTMLElement {
   }
 
   async generateCards() {
-    const pets = (await state.findPets()) as any;
+    let pets;
+    const currentState = state.getState();
+
+    if (currentState.userLat == 0 && currentState.userLng == 0) {
+      pets = (await state.findPets()) as any;
+    } else {
+      pets = (await state.findPetsNear()) as any;
+    }
+
     const cards = pets
       .map(
         (pet: any) => `

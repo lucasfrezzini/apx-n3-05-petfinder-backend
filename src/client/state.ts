@@ -119,6 +119,22 @@ export const state = {
       throw error;
     }
   },
+  async findPetsNear() {
+    try {
+      const currentState = this.getState();
+      const { userLat, userLng } = currentState;
+
+      return await fetchApi(
+        "pets/near",
+        "POST",
+        { userLat, userLng },
+        undefined,
+        "Error getting near pets"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
   async updateDataUser(data: { [key: string]: string | boolean }) {
     try {
       const token = hasToken();

@@ -18,6 +18,23 @@ petRoutes.get(
   }
 );
 
+petRoutes.post(
+  "/pets/near",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userLat, userLng } = req.body;
+
+      const pets = await PetController.findAllNear(
+        parseFloat(userLat),
+        parseFloat(userLng)
+      );
+      res.json(pets);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 // Post a pet report by id user
 petRoutes.post(
   "/pets",
