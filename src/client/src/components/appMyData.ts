@@ -1,8 +1,11 @@
 import { navigateTo } from "../../main";
+import { state } from "../../state";
 
 // Definir el componente de la pantalla de Registro
 class AppMyData extends HTMLElement {
   render() {
+    const currentState = state.getState();
+    const email = currentState.user!.email;
     this.innerHTML = `
       <style>
         .register {
@@ -65,7 +68,7 @@ class AppMyData extends HTMLElement {
           <button type="button" id="data">Modificar datos personales</button><br><br>
           <button type="button" id="pass">Modificar contraseña</button>
         </div>
-        <p class="login-text">👤 santi@santi.com <br><br><a href="/iniciar-sesion">Cerrar sesión</a></p>
+        <p class="login-text">👤 ${email} <br><br><a href="/iniciar-sesion">Cerrar sesión</a></p>
       </div>
     `;
 

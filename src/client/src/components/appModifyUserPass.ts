@@ -73,7 +73,7 @@ class AppModifyUserPass extends HTMLElement {
 
           <button type="submit">Modificar Password</button>
         </form>
-        <p class="login-text">¿Ya tienes una cuenta? <a href="/iniciar-sesion">Iniciar sesión</a></p>
+        <p class="login-text"></p>
       </div>
     `;
 

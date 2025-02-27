@@ -1,5 +1,6 @@
 import { isAuthenticated, dispatchAuthChange } from "../utils/auth";
 import { navigateTo } from "../../main";
+import { state } from "../../state";
 
 // Definir el componente del Header
 class AppHeader extends HTMLElement {
@@ -36,7 +37,14 @@ class AppHeader extends HTMLElement {
           margin: 0.5rem 0;
         }
         .menu-icon {
+          font-size: 14px;
+        }
+
+        .menu-icon span {
           cursor: pointer;
+          display: inline-block;
+          font-size: 26px;
+          margin-left: 10px
         }
         .menu.open {
           display: block;
@@ -48,7 +56,7 @@ class AppHeader extends HTMLElement {
           <a href="/" data-link>Home</a>
           <a href="/mascotas-perdidas" data-link>Mascotas Perdidas</a>
         </div>
-        <div class="menu-icon" id="menuIcon">☰</div>
+        <div class="menu-icon" id="menuIcon"><span>☰</span></div>
         <div class="menu" id="menu">
           ${isAuth ? this.getAuthLinks() : this.getNonAuthLinks()}
         </div>
@@ -67,14 +75,13 @@ class AppHeader extends HTMLElement {
 
   getNonAuthLinks() {
     return `
-      <a href="/" data-link>Inicio</a>
       <a href="/iniciar-sesion" data-link>Iniciar Sesión</a>
       <a href="/registrarse" data-link>Registrarse</a>
     `;
   }
 
   setupEventListeners() {
-    const menuIcon = this.querySelector("#menuIcon")!;
+    const menuIcon = this.querySelector("#menuIcon span")!;
     const menu = this.querySelector("#menu")!;
 
     menuIcon.addEventListener("click", () => {
