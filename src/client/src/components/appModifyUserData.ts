@@ -1,7 +1,5 @@
-import { navigateTo } from "../../main";
 import { state } from "../../state";
 import { getFormData } from "../utils/forms";
-import { dispatchAuthChange } from "../../src/utils/auth";
 
 // Definir el componente de la pantalla de Registro
 class AppModifyUserData extends HTMLElement {
