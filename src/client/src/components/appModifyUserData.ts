@@ -88,7 +88,6 @@ class AppModifyUserData extends HTMLElement {
     `;
 
     const form = this.querySelector("#registerForm")! as HTMLFormElement;
-    const alert = this.querySelector("p.login-text")! as HTMLParagraphElement;
 
     form.addEventListener("submit", async (event: Event) => {
       event.preventDefault();
@@ -103,9 +102,9 @@ class AppModifyUserData extends HTMLElement {
         // Guardar el usuario en el estado
         state.setState({ ...state.getState(), user: updateUser });
 
-        alert.innerHTML = "Los cambios ya fueron efectuados 😎";
+        alert("Los cambios ya fueron efectuados 😎");
       } catch (error) {
-        alert.innerHTML = "Hubo algun error. Vuelve a intentarlo 🫠";
+        alert("Hubo algun error. Vuelve a intentarlo 🫠");
         console.error("Submit", error);
       }
     });

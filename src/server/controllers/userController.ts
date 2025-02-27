@@ -108,7 +108,6 @@ export class UserController {
       );
 
       const updateUser = await User.findByPk(userData.id);
-      console.log("ENTRE A PASSWPRD");
 
       return updateUser?.dataValues;
     } catch (error) {

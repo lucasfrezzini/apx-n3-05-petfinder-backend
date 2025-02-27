@@ -78,7 +78,6 @@ class AppModifyUserPass extends HTMLElement {
     `;
 
     const form = this.querySelector("#registerForm")! as HTMLFormElement;
-    const alert = this.querySelector("p.login-text")! as HTMLParagraphElement;
 
     form.addEventListener("submit", async (event: Event) => {
       event.preventDefault();
@@ -90,9 +89,9 @@ class AppModifyUserPass extends HTMLElement {
         // updatear usuario
         await state.updatePassword(formValues);
 
-        alert.innerHTML = "Los cambios ya fueron efectuados 😎";
+        alert("Los cambios ya fueron efectuados 😎");
       } catch (error) {
-        alert.innerHTML = "Hubo algun error. Vuelve a intentarlo 🫠";
+        alert("Hubo algun error. Vuelve a intentarlo 🫠");
         console.error("Submit", error);
       }
     });
