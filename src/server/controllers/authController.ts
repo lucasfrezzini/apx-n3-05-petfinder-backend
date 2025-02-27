@@ -8,8 +8,7 @@ import {
   NotFoundError,
   AuthError,
 } from "../utils/customErrors.js";
-import { User } from "../models/index.js";
-import { Auth } from "../models/authModel.js";
+import { User, Auth } from "../models/index.js";
 
 interface User {
   email: string;

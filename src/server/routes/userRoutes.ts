@@ -40,13 +40,27 @@ userRoutes.post(
 );
 
 // Update user data
-userRoutes.post(
-  "/user/update",
+userRoutes.put(
+  "/user/data",
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const updateUser = await UserController.updateUser(req.body);
       res.status(200).json(updateUser);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+// Update user data
+userRoutes.put(
+  "/user/pass",
+  tokenValidatorMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updatePassword = await UserController.updatePassword(req.body);
+      res.status(200).json(updatePassword);
     } catch (error: any) {
       next(error);
     }

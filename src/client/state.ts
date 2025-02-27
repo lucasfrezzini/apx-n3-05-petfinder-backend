@@ -116,11 +116,12 @@ export const state = {
   async updateDataUser(data: { [key: string]: string | boolean }) {
     try {
       const token = hasToken();
+      const currentState = this.getState();
 
       return await fetchApi(
         "user/data",
         "PUT",
-        { ...data, id: this.data.user!.id },
+        { ...data, id: currentState.user!.id },
         token as string,
         "Error updating user information"
       );
@@ -131,11 +132,12 @@ export const state = {
   async updatePassword(data: { [key: string]: string | boolean }) {
     try {
       const token = hasToken();
+      const currentState = this.getState();
 
       return await fetchApi(
         "user/pass",
         "PUT",
-        { ...data, id: this.data.user!.id },
+        { ...data, id: currentState.user!.id },
         token as string,
         "Error updating user password"
       );

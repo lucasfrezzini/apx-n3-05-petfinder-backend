@@ -1,6 +1,7 @@
 // Desc: Auth controller for handling user signup / signin
-import { NotFoundError } from "../utils/customErrors.js";
-import { User } from "../models/index.js";
+import { NotFoundError, ValidationError } from "../utils/customErrors.js";
+import { User, Auth } from "../models/index.js";
+import bcrypt from "bcrypt";
 
 interface User {
   id: number;
@@ -11,6 +12,12 @@ interface User {
   address?: string;
   lat?: string;
   lng?: string;
+}
+
+interface UserUpdatePass {
+  id: number;
+  password: string;
+  confirmPassword: string;
 }
 
 export class UserController {
@@ -75,6 +82,34 @@ export class UserController {
         },
       });
       const updateUser = await User.findByPk(userData.id);
+      return updateUser?.dataValues;
+    } catch (error) {
+      console.log("Fallo updateUser");
+      throw error;
+    }
+  }
+
+  // update data user
+  public static async updatePassword(userData: UserUpdatePass) {
+    try {
+      const { password, confirmPassword, id } = userData;
+      if (password !== confirmPassword) {
+        throw new ValidationError();
+      }
+
+      // Save the password in the database updated
+      await Auth.update(
+        { password: await bcrypt.hash(password, 10) },
+        {
+          where: {
+            user_id: id,
+          },
+        }
+      );
+
+      const updateUser = await User.findByPk(userData.id);
+      console.log("ENTRE A PASSWPRD");
+
       return updateUser?.dataValues;
     } catch (error) {
       console.log("Fallo updateUser");
