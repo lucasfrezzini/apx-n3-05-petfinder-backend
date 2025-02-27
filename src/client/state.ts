@@ -96,7 +96,7 @@ export const state = {
       const token = hasToken();
 
       return await fetchApi(
-        "/pets",
+        "pets",
         "POST",
         { data, userId },
         token as string,

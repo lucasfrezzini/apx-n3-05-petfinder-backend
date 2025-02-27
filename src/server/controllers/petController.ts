@@ -1,6 +1,13 @@
 import { v2 as cloudinary } from "cloudinary";
+import { algoliasearch } from "algoliasearch";
 import { Pet, User } from "../models/index.js";
 import "dotenv/config";
+
+const API_ID = process.env.ALGOLIA_API_ID!;
+const API_KEY = process.env.ALGOLIA_API_KEY!;
+
+const client = algoliasearch(API_ID, API_KEY);
+const indexName = "pets";
 
 export class PetController {
   static async uploadProfilePic(dataURI: string) {
@@ -22,6 +29,24 @@ export class PetController {
     }
   }
 
+  static async uploadToAlgolia(lat: string, lng: string, id: number) {
+    const _geoloc = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+    };
+
+    // Add record to an index
+    const { taskID } = await client.saveObject({
+      indexName,
+      body: {
+        objectID: id,
+        _geoloc,
+      },
+    });
+
+    return taskID;
+  }
+
   public static async findAll() {
     return await Pet.findAll();
   }
@@ -31,17 +56,17 @@ export class PetController {
     userId: number
   ) {
     try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+
       const dataURI = data["imageDataURI"] as string;
       const uploadResultURL = await this.uploadProfilePic(dataURI);
       if (!uploadResultURL) {
         throw new Error("Failed to upload image");
       }
-      console.log("Image uploaded:", uploadResultURL);
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error("User not found");
-      }
-      console.log("User found:", user);
+
       const report = await Pet.create({
         name: data.name,
         type_pet: data.type_pet,
@@ -55,10 +80,15 @@ export class PetController {
         UserId: userId,
       });
 
+      await this.uploadToAlgolia(
+        data.lat as string,
+        data.lng as string,
+        report.get("id") as number
+      );
+
       if (!report) {
         throw new Error("Error creating pet report");
       }
-      console.log("Pet report created:", report);
       return report;
     } catch (error) {
       throw error;
