@@ -74,7 +74,7 @@ export class AppLostPets extends HTMLElement {
   }
 
   async generateCards() {
-    let pets;
+    let pets, cards;
     const currentState = state.getState();
 
     if (currentState.userLat == 0 && currentState.userLng == 0) {
@@ -83,9 +83,10 @@ export class AppLostPets extends HTMLElement {
       pets = (await state.findPetsNear()) as any;
     }
 
-    const cards = pets
-      .map(
-        (pet: any) => `
+    if (pets.length > 0) {
+      cards = pets
+        .map(
+          (pet: any) => `
         <div class="card" id="${pet.id}">
           <img src="${pet.imageURL}" alt="${pet.name}">
           <h3>${pet.name}</h3>
@@ -95,8 +96,11 @@ export class AppLostPets extends HTMLElement {
           </button>
         </div>
       `
-      )
-      .join("");
+        )
+        .join("");
+    } else {
+      cards = `<div class="card"><h4>No se encontraron mascotas perdidas para mostrar o cerca de su zona</h4></div>`;
+    }
 
     this.querySelector(".cards")!.innerHTML = cards;
   }
