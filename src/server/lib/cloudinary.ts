@@ -14,7 +14,7 @@ export async function uploadProfilePic(dataURI: string) {
   // Upload an image
   try {
     const uploadResult = await cloudinary.uploader.upload(dataURI);
-    return uploadResult.url;
+    return uploadResult;
   } catch (error) {
     throw error;
   }

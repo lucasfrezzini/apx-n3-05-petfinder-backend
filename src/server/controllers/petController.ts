@@ -50,7 +50,8 @@ export class PetController {
         lng: data.lng,
         location: data.location,
         status: "lost",
-        imageURL: uploadResultURL,
+        imageURL: uploadResultURL.url,
+        imageAssetID: uploadResultURL.asset_id,
         UserId: userId,
       });
 
