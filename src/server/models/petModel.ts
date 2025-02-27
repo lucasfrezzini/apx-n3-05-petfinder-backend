@@ -36,6 +36,10 @@ export const Pet = sequelize.define("Pet", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  imageAssetID: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   location: {
     type: DataTypes.STRING,
     allowNull: true,

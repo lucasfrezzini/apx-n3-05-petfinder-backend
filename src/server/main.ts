@@ -4,8 +4,7 @@ import ViteExpress from "vite-express";
 import "dotenv/config";
 const PORT = parseInt(process.env.PORT as string) || 3000;
 
-// import { Pet, User, Report } from "./models/index.js";
-// import { Auth } from "./models/authModel.js";
+// import { Pet, User, Report, Auth } from "./models/index.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { authRoutes } from "./routes/authRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
