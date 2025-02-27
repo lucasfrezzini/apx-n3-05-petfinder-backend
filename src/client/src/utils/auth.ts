@@ -61,3 +61,13 @@ export function dispatchAuthChange() {
   const event = new CustomEvent("auth-change");
   window.dispatchEvent(event);
 }
+
+export function hasToken(): void | string {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No token found");
+  }
+
+  return token;
+}

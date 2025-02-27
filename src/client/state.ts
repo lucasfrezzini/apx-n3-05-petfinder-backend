@@ -1,6 +1,5 @@
 import { hasToken } from "./src/utils/auth";
 import { fetchApi } from "./src/utils/api";
-const API_URL = "http://localhost:3000/api";
 
 export const state = {
   data: {
