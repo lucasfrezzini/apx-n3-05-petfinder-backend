@@ -2,12 +2,13 @@ const API_URL = "http://localhost:3000/api";
 
 export const state = {
   data: {
-    user: null,
+    user: null as any,
     pets: [] as Element[],
     reports: [] as Element[],
     seenPet: {
       id: null as string | null,
     },
+    goTo: "" as string,
   },
   getState() {
     if (!this.data.user) {
@@ -159,6 +160,35 @@ export const state = {
         return responseData;
       } else {
         throw new Error("Error getting pets");
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updateDataUser(data: { [key: string]: string | boolean }) {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+      console.log({ ...data, id: this.data.user!.id });
+
+      const response = await fetch(`${API_URL}/user/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ ...data, id: this.data.user!.id }),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        return responseData;
+      } else {
+        throw new Error("Error updating user information");
       }
     } catch (error) {
       throw error;

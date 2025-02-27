@@ -3,6 +3,7 @@ import { NotFoundError } from "../utils/customErrors.js";
 import { User } from "../models/index.js";
 
 interface User {
+  id: number;
   email: string;
   password: string;
   name?: string;
@@ -10,7 +11,6 @@ interface User {
   address?: string;
   lat?: string;
   lng?: string;
-  role?: string;
 }
 
 export class UserController {
@@ -61,6 +61,23 @@ export class UserController {
         throw new NotFoundError();
       }
     } catch (error) {
+      throw error;
+    }
+  }
+
+  // update data user
+  public static async updateUser(userData: User) {
+    try {
+      const readyUserData = UserController.readyUserData(userData);
+      await User.update(readyUserData, {
+        where: {
+          id: userData.id,
+        },
+      });
+      const updateUser = await User.findByPk(userData.id);
+      return updateUser?.dataValues;
+    } catch (error) {
+      console.log("Fallo updateUser");
       throw error;
     }
   }

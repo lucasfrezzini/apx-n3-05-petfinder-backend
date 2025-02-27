@@ -38,3 +38,17 @@ userRoutes.post(
     }
   }
 );
+
+// Update user data
+userRoutes.post(
+  "/user/update",
+  tokenValidatorMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updateUser = await UserController.updateUser(req.body);
+      res.status(200).json(updateUser);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);

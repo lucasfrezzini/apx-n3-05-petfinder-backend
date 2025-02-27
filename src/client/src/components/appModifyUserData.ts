@@ -6,6 +6,9 @@ import { dispatchAuthChange } from "../../src/utils/auth";
 // Definir el componente de la pantalla de Registro
 class AppModifyUserData extends HTMLElement {
   render() {
+    const currentState = state.getState();
+    const user: any = currentState.user;
+    console.log(user);
     this.innerHTML = `
       <style>
         .register {
@@ -64,27 +67,31 @@ class AppModifyUserData extends HTMLElement {
       </style>
       <div class="register">
         <h1>Datos personales</h1>
-        <h2>Crea una cuenta para comenzar</h2>
+        <h2>Modifique los datos que desea actualizar</h2>
         <form id="registerForm">
           <label for="name">Nombre:</label>
-          <input type="text" id="name" name="name" required>
+          <input type="text" id="name" name="name" required value="${
+            user!.name
+          }">
 
-          <label for="email">Correo electrónico:</label>
-          <input type="email" id="email" name="email" required>
+          <label for="phone">Teléfono:</label>
+          <input type="text" id="phone" name="phone" placeholder="223-2222222" value="${
+            user!.phone
+          }">
 
-          <label for="password">Contraseña:</label>
-          <input type="password" id="password" name="password" required>
+          <label for="address">Direccion</label>
+          <input type="text" id="address" name="address" placeholder="Quimes Oeste, Buenos Aires" value="${
+            user!.address
+          }">
 
-          <label for="confirmPassword">Confirmar contraseña:</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" required>
-
-          <button type="submit">Registrarse</button>
+          <button type="submit">Actualizar datos personales</button>
+          <p class="login-text"></p>
         </form>
-        <p class="login-text">¿Ya tienes una cuenta? <a href="/iniciar-sesion">Iniciar sesión</a></p>
       </div>
     `;
 
     const form = this.querySelector("#registerForm")! as HTMLFormElement;
+    const alert = this.querySelector("p.login-text")! as HTMLParagraphElement;
 
     form.addEventListener("submit", async (event: Event) => {
       event.preventDefault();
@@ -92,27 +99,17 @@ class AppModifyUserData extends HTMLElement {
       // Obtener los valores del formulario
       const formValues = getFormData(form);
 
-      if (formValues.password !== formValues.confirmPassword) {
-        alert("Las contraseñas no coinciden");
-        return;
-      }
-
       try {
-        // registrar usuario
-        const newUser = await state.signup(formValues);
-        // loguear usuario
-        const { email, password } = formValues;
-        const newToken = await state.login(email as string, password as string);
+        // updatear usuario
+        const updateUser = await state.updateDataUser(formValues);
+
         // Guardar el usuario en el estado
-        localStorage.setItem("token", newToken);
-        state.setState({ ...state.getState(), user: newUser });
-        // Redirigir al usuario a la pantalla de inicio
-        //! Definir a que pantallas se redirige al usuario o ver si se puede hacer de manera dinámica
-        dispatchAuthChange();
-        navigateTo("/mascotas-perdidas");
+        state.setState({ ...state.getState(), user: updateUser });
+
+        alert.innerHTML = "Los cambios ya fueron efectuados 😎";
       } catch (error) {
+        alert.innerHTML = "Hubo algun error. Vuelve a intentarlo 🫠";
         console.error("Submit", error);
-        alert("Error al registrarse");
       }
     });
   }
