@@ -15,6 +15,11 @@ class AppHeader extends HTMLElement {
           background-color: #333;
           color: white;
         }
+        header a {
+          color: white;
+          text-decoration: none;
+          margin: 15px
+        }
         .menu {
           display: none;
           position: absolute;
@@ -39,6 +44,10 @@ class AppHeader extends HTMLElement {
       </style>
       <header>
         <div class="logo">Petsitos</div>
+        <div>
+          <a href="/" data-link>Home</a>
+          <a href="/mascotas-perdidas" data-link>Mascotas Perdidas</a>
+        </div>
         <div class="menu-icon" id="menuIcon">☰</div>
         <div class="menu" id="menu">
           ${isAuth ? this.getAuthLinks() : this.getNonAuthLinks()}

@@ -6,7 +6,6 @@ class AppModifyUserData extends HTMLElement {
   render() {
     const currentState = state.getState();
     const user: any = currentState.user;
-    console.log(user);
     this.innerHTML = `
       <style>
         .register {
