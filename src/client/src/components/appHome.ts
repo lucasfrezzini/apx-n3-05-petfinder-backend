@@ -1,4 +1,6 @@
 // Definir el componente de la pantalla Home
+import { navigateTo } from "../../main";
+import { state } from "../../state";
 class AppHome extends HTMLElement {
   render() {
     this.innerHTML = `
@@ -8,6 +10,7 @@ class AppHome extends HTMLElement {
           padding: 2rem;
         }
         .home img {
+          margin: 0 auto;
           width: 100%;
           max-width: 400px;
           height: auto;
@@ -49,11 +52,21 @@ class AppHome extends HTMLElement {
         <h1>Bienvenido a Petfinder</h1>
         <h2>Descripcion de la App</h2>
         <div class="buttons">
-          <button class="primary">Dar mi ubicacion actual</button>
-          <button class="secondary">Como funciona Pet Finder?</button>
+          <button class="primary" id="gpsBtn">Dar mi ubicacion actual</button>
         </div>
       </div>
     `;
+
+    const gpsButton = this.querySelector("#gpsBtn");
+    gpsButton?.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigator.geolocation.getCurrentPosition((position) => {
+        const currentState = state.getState();
+        state.setLatLng(position.coords.latitude, position.coords.longitude);
+        state.setState(currentState);
+        navigateTo("/mascotas-perdidas");
+      });
+    });
   }
 
   connectedCallback() {

@@ -10,6 +10,8 @@ export const state = {
       id: null as string | null,
     },
     goTo: "" as string,
+    userLng: 0,
+    userLat: 0,
   },
   getState() {
     if (!this.data.user) {
@@ -23,6 +25,10 @@ export const state = {
   setState(newState: any) {
     this.data = newState;
     localStorage.setItem("state", JSON.stringify(this.data));
+  },
+  setLatLng(lat: number, lng: number) {
+    this.data.userLat = lat;
+    this.data.userLng = lng;
   },
   async signup(data: { [key: string]: string | boolean }) {
     try {
