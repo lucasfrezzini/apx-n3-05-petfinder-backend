@@ -9,6 +9,7 @@ import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { authRoutes } from "./routes/authRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { petRoutes } from "./routes/petRoutes.js";
+import { reportRoutes } from "./routes/reportRoutes.js";
 
 // User.sync({ force: true });
 // Auth.sync({ force: true });
@@ -22,6 +23,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", petRoutes);
+app.use("/api", reportRoutes);
 
 app.use(errorMiddleware);
 

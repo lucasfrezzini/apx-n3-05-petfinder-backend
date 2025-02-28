@@ -135,6 +135,43 @@ export const state = {
       throw error;
     }
   },
+  async getPetById() {
+    try {
+      const token = hasToken();
+      const currentState = this.getState();
+      const { seenPet } = currentState;
+
+      const endpoint = `pets/${seenPet.id}`;
+
+      return await fetchApi(
+        endpoint,
+        "POST",
+        undefined,
+        token as string,
+        "Error getting pet by id"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  async createSeenReport(
+    data: { [key: string]: string | boolean },
+    petId: string
+  ) {
+    try {
+      const token = hasToken();
+
+      return await fetchApi(
+        "report",
+        "POST",
+        { data, petId },
+        token as string,
+        "Error creating new seen report"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
   async updateDataUser(data: { [key: string]: string | boolean }) {
     try {
       const token = hasToken();

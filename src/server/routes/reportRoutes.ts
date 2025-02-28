@@ -2,33 +2,22 @@
 
 import express, { NextFunction, Request, Response } from "express";
 export const reportRoutes = express.Router();
-import { PetController } from "../controllers/petController.js";
+import { ReportController } from "../controllers/reportController.js";
 import { tokenValidatorMiddleware } from "../middlewares/tokenValidatorMiddleware.js";
 
-// Get all pets reports
-reportRoutes.get(
-  "/pets",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const pets = await PetController.findAll();
-      res.json(pets);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-// Post a pet report by id user
+// Save new report and send Email
 reportRoutes.post(
-  "/pets",
+  "/report",
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log("Request body:", req.body);
-      const { userId, data } = req.body;
-      const petReport = await PetController.createPetReport(
+      const { data, petId } = req.body;
+      console.log(data, petId);
+
+      const petReport = await ReportController.createSeenReport(
         data,
-        parseInt(userId)
+        parseInt(petId)
       );
       res.status(200).json(petReport);
     } catch (error) {

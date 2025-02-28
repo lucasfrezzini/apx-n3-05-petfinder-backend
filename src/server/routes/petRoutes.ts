@@ -35,6 +35,19 @@ petRoutes.post(
   }
 );
 
+petRoutes.post(
+  "/pets/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(req.params.id);
+      const pets = await PetController.findOne(id);
+      res.json(pets);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 // Post a pet report by id user
 petRoutes.post(
   "/pets",

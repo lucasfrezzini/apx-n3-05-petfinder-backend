@@ -4,6 +4,10 @@ import { getNearInAlgolia, uploadToAlgolia } from "../lib/algolia.js";
 import { uploadProfilePic } from "../lib/cloudinary.js";
 
 export class PetController {
+  public static async findOne(id: number) {
+    return await Pet.findByPk(id);
+  }
+
   public static async findAll() {
     return await Pet.findAll();
   }
