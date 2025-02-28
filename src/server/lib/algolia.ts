@@ -25,13 +25,22 @@ export async function uploadToAlgolia(lat: string, lng: string, id: number) {
   return taskID;
 }
 
+export async function updateInAlgolia(petId: string, data: any) {
+  const response = await client.partialUpdateObject({
+    indexName,
+    objectID: petId,
+    attributesToUpdate: { ...data },
+  });
+  return response;
+}
+
 export async function getNearInAlgolia(lat: number, lng: number) {
   const hits = await client.searchSingleIndex({
     indexName,
     searchParams: {
       query: "", // Consulta vacía para buscar todos los elementos
       aroundLatLng: `${lat},${lng}`,
-      aroundRadius: 50000000, // Radio en metros
+      aroundRadius: 50000, // Radio en metros
     },
   });
 

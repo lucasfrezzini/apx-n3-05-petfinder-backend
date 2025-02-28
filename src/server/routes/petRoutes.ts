@@ -35,6 +35,20 @@ petRoutes.post(
   }
 );
 
+petRoutes.put(
+  "/pets/data",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { data, id } = req.body;
+
+      const pets = await PetController.updatePetReport(data, id);
+      res.json(pets);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 petRoutes.post(
   "/pets/:id",
   async (req: Request, res: Response, next: NextFunction) => {

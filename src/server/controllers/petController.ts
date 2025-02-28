@@ -1,7 +1,11 @@
 import { Pet, User } from "../models/index.js";
 import { Op } from "sequelize";
-import { getNearInAlgolia, uploadToAlgolia } from "../lib/algolia.js";
-import { uploadProfilePic } from "../lib/cloudinary.js";
+import {
+  getNearInAlgolia,
+  uploadToAlgolia,
+  updateInAlgolia,
+} from "../lib/algolia.js";
+import { uploadProfilePic, destroyProfilePic } from "../lib/cloudinary.js";
 
 export class PetController {
   public static async findOne(id: number) {
@@ -69,6 +73,61 @@ export class PetController {
         throw new Error("Error creating pet report");
       }
       return report;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public static async updatePetReport(
+    data: { [key: string]: string | boolean },
+    petId: string
+  ) {
+    try {
+      const pet = await Pet.findByPk(petId);
+      if (!pet) {
+        throw new Error("Pet not found");
+      }
+      console.log(pet);
+
+      const dataURI = data["imageDataURI"] as string;
+      let uploadResultURL: any = {};
+      uploadResultURL!.url = pet.dataValues.imageURL;
+      uploadResultURL!.asset_id = pet.dataValues.imageAssetID;
+
+      console.log(uploadResultURL);
+
+      if (dataURI) {
+        uploadResultURL = await uploadProfilePic(dataURI);
+        if (!uploadResultURL) {
+          throw new Error("Failed to upload image");
+        }
+        await destroyProfilePic(pet.dataValues.imageAssetID);
+      }
+
+      const newData = {
+        name: data.name,
+        type_pet: data.type_pet,
+        age: data.age,
+        size: data.size,
+        lat: data.lat,
+        lng: data.lng,
+        location: data.location,
+        imageURL: uploadResultURL!.url,
+        imageAssetID: uploadResultURL!.asset_id,
+      };
+
+      await Pet.update(newData, {
+        where: {
+          id: petId,
+        },
+      });
+
+      const petUpdated = await updateInAlgolia(petId, newData);
+
+      if (!petUpdated) {
+        throw new Error("Error creating pet report");
+      }
+      return petUpdated;
     } catch (error) {
       throw error;
     }

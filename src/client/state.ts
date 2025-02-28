@@ -9,6 +9,7 @@ export const state = {
     seenPet: {
       id: null as string | null,
     },
+    editPet: null as string | null,
     goTo: "" as string,
     userLng: 0,
     userLat: 0,
@@ -29,6 +30,9 @@ export const state = {
   setLatLng(lat: number, lng: number) {
     this.data.userLat = lat;
     this.data.userLng = lng;
+  },
+  setEditPet(id: string) {
+    this.data.editPet = id;
   },
   async signup(data: { [key: string]: string | boolean }) {
     try {
@@ -135,13 +139,11 @@ export const state = {
       throw error;
     }
   },
-  async getPetById() {
+  async getPetById(id: string) {
     try {
       const token = hasToken();
-      const currentState = this.getState();
-      const { seenPet } = currentState;
 
-      const endpoint = `pets/${seenPet.id}`;
+      const endpoint = `pets/${id}`;
 
       return await fetchApi(
         endpoint,
@@ -199,6 +201,40 @@ export const state = {
         { ...data, id: currentState.user!.id },
         token as string,
         "Error updating user password"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updatePetReport(
+    data: { [key: string]: string | boolean },
+    petId: string
+  ) {
+    try {
+      const token = hasToken();
+
+      return await fetchApi(
+        "pets/data",
+        "PUT",
+        { data, id: petId },
+        token as string,
+        "Error updating pet data"
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getUserPets() {
+    try {
+      const token = hasToken();
+      const currentState = this.getState();
+
+      return await fetchApi(
+        "user/pets",
+        "POST",
+        { id: currentState.user.id },
+        token as string,
+        "Error getting user pets"
       );
     } catch (error) {
       throw error;
