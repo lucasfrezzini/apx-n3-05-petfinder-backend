@@ -11,9 +11,7 @@ reportRoutes.post(
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("Request body:", req.body);
       const { data, petId } = req.body;
-      console.log(data, petId);
 
       const petReport = await ReportController.createSeenReport(
         data,

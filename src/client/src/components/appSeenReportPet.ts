@@ -69,8 +69,8 @@ class AppSeenReportPet extends HTMLElement {
           <label for="phone">Tu teléfono:</label>
           <input type="tel" id="phone" name="phone" required>
 
-          <label for="moreInfo">¿Dónde lo viste?</label>
-          <textarea name="moreInfo" rows="5" cols="30" placeholder="Toda la info que tengas es muy valiosa" required></textarea>
+          <label for="info">¿Dónde lo viste?</label>
+          <textarea name="info" rows="5" cols="30" placeholder="Toda la info que tengas es muy valiosa" required></textarea>
 
           <button type="submit">Enviar Información</button>
         </form>

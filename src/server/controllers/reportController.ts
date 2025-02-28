@@ -4,7 +4,7 @@ import { sendEmailByResend } from "../lib/resend.js";
 interface SeenReport {
   name: string;
   phone: string;
-  moreInfo: string;
+  info: string;
 }
 
 interface User {
@@ -38,7 +38,7 @@ export class ReportController {
     <img src="${pet.imageURL}" width="200px"/>
     <h2>Tenemos informacion de ${pet.name}</h2>
     <h3>Informacion proporcionada</h3>
-    <p>${data.moreInfo}</p>
+    <p>${data.info}</p>
     <h3>Informacion de contacto</h3>
     <h4>Nombre: ${data.name}</h4>
     <h4>Telefono: ${data.phone}</h4>
@@ -62,7 +62,8 @@ export class ReportController {
       const newSeenReport = await Report.create({
         name: data.name,
         phone: data.phone,
-        info: data.moreInfo,
+        info: data.info,
+        PetId: petId,
       });
 
       if (!newSeenReport) {
