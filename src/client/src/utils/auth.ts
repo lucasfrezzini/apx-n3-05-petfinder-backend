@@ -13,8 +13,10 @@ const privateRoutes = [
   "/mascotas-reportadas",
   "/avistaje-mascota",
   "/mis-datos",
+  "/mis-mascotas",
   "/modify-data",
   "/modify-pass",
+  "/modify-pet",
   "/cerrar-sesion",
 ];
 

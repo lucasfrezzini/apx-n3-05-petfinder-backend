@@ -1,6 +1,5 @@
 import { isAuthenticated, dispatchAuthChange } from "../utils/auth";
 import { navigateTo } from "../../main";
-import { state } from "../../state";
 
 // Definir el componente del Header
 class AppHeader extends HTMLElement {
@@ -66,8 +65,9 @@ class AppHeader extends HTMLElement {
 
   getAuthLinks() {
     return `
-      <a href="/mascotas-perdidas" data-link>Mascotas Perdidas</a>
       <a href="/reportar-mascota" data-link>Reportar Mascota</a>
+      <a href="/mis-mascotas" data-link>Mis Mascotas</a>
+      <hr>
       <a href="/mis-datos" data-link>Mis datos</a>
       <a href="/cerrar-sesion" data-link>Cerrar Sesión</a>
     `;

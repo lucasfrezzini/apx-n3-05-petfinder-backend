@@ -39,6 +39,21 @@ userRoutes.post(
   }
 );
 
+// Get user id by token
+userRoutes.post(
+  "/user/pets",
+  tokenValidatorMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.body.id;
+      const pets = await UserController.getUserPets(parseInt(id));
+      res.status(200).json(pets);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
 // Update user data
 userRoutes.put(
   "/user/data",

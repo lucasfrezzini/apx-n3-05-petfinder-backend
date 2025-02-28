@@ -1,6 +1,6 @@
 // Desc: Auth controller for handling user signup / signin
 import { NotFoundError, ValidationError } from "../utils/customErrors.js";
-import { User, Auth } from "../models/index.js";
+import { User, Auth, Pet } from "../models/index.js";
 import bcrypt from "bcrypt";
 
 interface User {
@@ -64,6 +64,21 @@ export class UserController {
       const user = await User.findOne({ where: { email } });
       if (user) {
         return user.get("id");
+      } else {
+        throw new NotFoundError();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // get user pets by id
+  public static async getUserPets(id: number) {
+    try {
+      const pets = await Pet.findAll({ where: { UserId: id } });
+
+      if (pets) {
+        return pets.map((pet) => pet.dataValues);
       } else {
         throw new NotFoundError();
       }

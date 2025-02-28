@@ -5,7 +5,7 @@ import { getFormData } from "../utils/forms";
 class AppSeenReportPet extends HTMLElement {
   async connectedCallback() {
     const currentState = state.getState();
-    const pet = await state.getPetById();
+    const pet = await state.getPetById(currentState.seenPet.id!);
 
     this.render(pet);
   }
