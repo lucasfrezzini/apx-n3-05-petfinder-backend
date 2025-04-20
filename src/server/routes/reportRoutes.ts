@@ -11,12 +11,12 @@ reportRoutes.post(
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { data, petId } = req.body;
+      const { data, id } = req.body;
+      console.log(data, id);
 
-      const petReport = await ReportController.createSeenReport(
-        data,
-        parseInt(petId)
-      );
+      const petReport = await ReportController.createSeenReport(data, id);
+      console.log(petReport);
+
       res.status(200).json(petReport);
     } catch (error) {
       next(error);
