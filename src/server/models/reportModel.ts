@@ -13,7 +13,7 @@ export const Report = sequelize.define("Report", {
     allowNull: false,
   },
   info: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
 });

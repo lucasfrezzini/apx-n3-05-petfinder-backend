@@ -16,6 +16,10 @@ export const Pet = sequelize.define("Pet", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   size: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -32,13 +36,10 @@ export const Pet = sequelize.define("Pet", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  imageURL: {
-    type: DataTypes.STRING,
+  images: {
+    type: DataTypes.JSONB,
     allowNull: false,
-  },
-  imageAssetID: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    defaultValue: [],
   },
   location: {
     type: DataTypes.STRING,

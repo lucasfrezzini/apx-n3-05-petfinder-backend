@@ -28,4 +28,9 @@ export const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  profilePic: {
+    type: DataTypes.JSONB,
+    allowNull: false,
+    defaultValue: [],
+  },
 });
