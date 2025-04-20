@@ -18,15 +18,15 @@ petRoutes.get(
   }
 );
 
-petRoutes.post(
+petRoutes.get(
   "/pets/near",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userLat, userLng } = req.body;
+      const { lat, lng } = req.query;
 
       const pets = await PetController.findAllNear(
-        parseFloat(userLat),
-        parseFloat(userLng)
+        parseFloat(lat as string),
+        parseFloat(lng as string)
       );
       res.json(pets);
     } catch (error) {
@@ -49,13 +49,41 @@ petRoutes.put(
   }
 );
 
+petRoutes.put(
+  "/pets/status",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.body;
+
+      const pet = await PetController.changeStatusPet(id);
+      res.json(pet);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 petRoutes.post(
   "/pets/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = parseInt(req.params.id);
-      const pets = await PetController.findOne(id);
-      res.json(pets);
+      const pet = await PetController.findOne(id);
+      res.json(pet);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+petRoutes.post(
+  "/pets/:id/reports",
+  tokenValidatorMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(req.params.id);
+      const pet = await PetController.findPetWithReports(id);
+      res.json(pet);
     } catch (error) {
       next(error);
     }
