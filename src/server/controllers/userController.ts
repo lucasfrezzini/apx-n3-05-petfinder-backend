@@ -1,7 +1,8 @@
 // Desc: Auth controller for handling user signup / signin
 import { NotFoundError, ValidationError } from "../utils/customErrors.js";
-import { User, Auth, Pet } from "../models/index.js";
+import { User, Auth, Pet, Report } from "../models/index.js";
 import bcrypt from "bcrypt";
+import { destroyProfilePic, uploadProfilePic } from "../lib/cloudinary.js";
 
 interface User {
   id: number;
@@ -12,6 +13,12 @@ interface User {
   address?: string;
   lat?: string;
   lng?: string;
+  profilePic?:
+    | {
+        url: string;
+        public_id: string;
+      }
+    | string;
 }
 
 interface UserUpdatePass {
@@ -33,14 +40,35 @@ export class UserController {
     }
   }
 
-  static readyUserData(userData: User) {
+  static async readyUserData(userData: User, existingData: User) {
+    console.log("userData", userData);
+    console.log("existingData", existingData);
+
+    let newProfilePic = existingData.profilePic;
+    console.log("aca", newProfilePic);
+
+    if (userData.profilePic && userData.profilePic !== "") {
+      const resultProfilePic = await uploadProfilePic(
+        userData.profilePic as string
+      );
+      if (!resultProfilePic) {
+        throw new Error("Failed to upload image");
+      }
+      await destroyProfilePic(existingData);
+      newProfilePic = { ...resultProfilePic };
+    }
+
+    console.log("dsp", newProfilePic);
+
+    // Merger inteligente
     return {
-      email: userData.email,
-      name: userData.name || "",
-      phone: userData.phone || "",
-      address: userData.address || "",
-      lat: userData.lat || "",
-      lng: userData.lng || "",
+      email: userData.email || existingData.email,
+      name: userData.name || existingData.name,
+      phone: userData.phone || existingData.phone,
+      address: userData.address || existingData.address,
+      lat: userData.lat || existingData.lat,
+      lng: userData.lng || existingData.lng,
+      profilePic: newProfilePic,
     };
   }
 
@@ -75,7 +103,12 @@ export class UserController {
   // get user pets by id
   public static async getUserPets(id: number) {
     try {
-      const pets = await Pet.findAll({ where: { UserId: id } });
+      const pets = await Pet.findAll({
+        where: {
+          UserId: id,
+        },
+        order: [["status", "DESC"]],
+      });
 
       if (pets) {
         return pets.map((pet) => pet.dataValues);
@@ -87,10 +120,48 @@ export class UserController {
     }
   }
 
+  // get user reports by id
+  public static async getUserPetsWithReports(id: number) {
+    try {
+      const userWithPetsAndReports = await User.findOne({
+        where: { id },
+        include: [
+          {
+            model: Pet,
+            include: [
+              {
+                model: Report,
+                separate: true,
+                order: [["createdAt", "DESC"]],
+              },
+            ],
+          },
+        ],
+      });
+
+      if (userWithPetsAndReports) {
+        // return pets.map((pet) => pet.dataValues);
+        return userWithPetsAndReports.dataValues.Pets;
+      } else {
+        throw new NotFoundError();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // update data user
   public static async updateUser(userData: User) {
     try {
-      const readyUserData = UserController.readyUserData(userData);
+      console.log("userdata", userData);
+      const existingData = await User.findByPk(userData.id);
+
+      const readyUserData = await UserController.readyUserData(
+        userData,
+        existingData?.dataValues
+      );
+      console.log("readyuserdata", readyUserData);
+
       await User.update(readyUserData, {
         where: {
           id: userData.id,
@@ -126,7 +197,7 @@ export class UserController {
 
       return updateUser?.dataValues;
     } catch (error) {
-      console.log("Fallo updateUser");
+      console.log("Fallo updatePassword");
       throw error;
     }
   }
