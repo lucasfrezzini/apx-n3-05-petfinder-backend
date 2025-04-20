@@ -1,5 +1,6 @@
 import { Pet, User, Report } from "../models/index.js";
 import { sendEmailByResend } from "../lib/resend.js";
+import { getHTMLString } from "../utils/emailTemplate.js";
 
 interface SeenReport {
   name: string;
@@ -33,18 +34,20 @@ export class ReportController {
   }
 
   static async sendReportByEmail(data: SeenReport, user: any, pet: any) {
-    const subject = `Reporte de Mascota - ${pet.name} by TanoPet FinderApp`;
-    const htmlString = `
-    <img src="${pet.imageURL}" width="200px"/>
-    <h2>Tenemos informacion de ${pet.name}</h2>
-    <h3>Informacion proporcionada</h3>
-    <p>${data.info}</p>
-    <h3>Informacion de contacto</h3>
-    <h4>Nombre: ${data.name}</h4>
-    <h4>Telefono: ${data.phone}</h4>
-    `;
+    const subject = `Alerta de ${pet.name}`;
 
-    sendEmailByResend(data.name, user.email, subject, htmlString);
+    sendEmailByResend(
+      "Pet Rescue by Tano",
+      user.email,
+      subject,
+      getHTMLString(
+        pet.name,
+        user.name || user.email,
+        data.name,
+        data.phone,
+        data.info
+      )
+    );
   }
 
   static async saveSeenReport(data: SeenReport, petId: number) {
@@ -69,6 +72,7 @@ export class ReportController {
       if (!newSeenReport) {
         throw new Error("Error creating pet report");
       }
+
       return { newSeenReport, user, pet };
     } catch (error) {
       throw error;
