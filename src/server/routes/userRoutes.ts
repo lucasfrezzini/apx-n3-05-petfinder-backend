@@ -39,7 +39,7 @@ userRoutes.post(
   }
 );
 
-// Get user id by token
+// Get user pets by id
 userRoutes.post(
   "/user/pets",
   tokenValidatorMiddleware,
@@ -54,12 +54,28 @@ userRoutes.post(
   }
 );
 
+// Get user pets with his reports
+userRoutes.post(
+  "/user/reports",
+  tokenValidatorMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.body.id;
+      const pets = await UserController.getUserPetsWithReports(id);
+      res.status(200).json(pets);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
 // Update user data
 userRoutes.put(
   "/user/data",
   tokenValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("loquellega", req.body);
       const updateUser = await UserController.updateUser(req.body);
       res.status(200).json(updateUser);
     } catch (error: any) {
