@@ -18,7 +18,7 @@ interface User {
   address?: string;
   lat?: string;
   lng?: string;
-  role?: string;
+  profilePic?: string;
 }
 
 export class AuthController {
@@ -42,6 +42,7 @@ export class AuthController {
       address: userData.address || "",
       lat: userData.lat || "",
       lng: userData.lng || "",
+      profilePic: userData.profilePic || "",
     };
   }
 
@@ -108,6 +109,9 @@ export class AuthController {
 
       // Generate a new token and return it
       if (isValid) {
+        const userData = await User.findOne({
+          where: { id: user.get("user_id") },
+        });
         const SECRET_TEXT = process.env.SECRET_TEXT!;
         const token = jwt.sign(
           {
@@ -116,7 +120,11 @@ export class AuthController {
           SECRET_TEXT,
           { expiresIn: "1h" }
         );
-        return token;
+        return {
+          token: token,
+          userData,
+          id: user.get("id"),
+        };
       } else {
         throw new AuthError("Credenciales inválidas");
       }
