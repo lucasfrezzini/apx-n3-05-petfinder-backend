@@ -1,11 +1,11 @@
-import { Pet, User } from "../models/index.js";
+import { Pet, User, Report } from "../models/index.js";
 import { Op } from "sequelize";
 import {
   getNearInAlgolia,
   uploadToAlgolia,
   updateInAlgolia,
 } from "../lib/algolia.js";
-import { uploadProfilePic, destroyProfilePic } from "../lib/cloudinary.js";
+import { destroyPetsPics, uploadPetsPics } from "../lib/cloudinary.js";
 
 export class PetController {
   public static async findOne(id: number) {
@@ -13,7 +13,11 @@ export class PetController {
   }
 
   public static async findAll() {
-    return await Pet.findAll();
+    return await Pet.findAll({
+      where: {
+        status: "lost",
+      },
+    });
   }
 
   public static async findAllNear(lat: number, lng: number) {
@@ -33,8 +37,20 @@ export class PetController {
     });
   }
 
+  public static async findPetWithReports(id: number) {
+    return await Pet.findByPk(id, {
+      include: [
+        {
+          model: Report,
+          separate: true, // Para que el orden funcione correctamente
+          order: [["createdAt", "DESC"]],
+        },
+      ],
+    });
+  }
+
   public static async createPetReport(
-    data: { [key: string]: string | boolean },
+    data: { [key: string]: string | boolean | string[] },
     userId: number
   ) {
     try {
@@ -43,9 +59,9 @@ export class PetController {
         throw new Error("User not found");
       }
 
-      const dataURI = data["imageDataURI"] as string;
-      const uploadResultURL = await uploadProfilePic(dataURI);
-      if (!uploadResultURL) {
+      const arrDataURI = data["arrDataURI"] as string[];
+      const uploadArr = await uploadPetsPics(arrDataURI);
+      if (uploadArr.length === 0) {
         throw new Error("Failed to upload image");
       }
 
@@ -57,9 +73,9 @@ export class PetController {
         lat: data.lat,
         lng: data.lng,
         location: data.location,
+        description: data.description,
         status: "lost",
-        imageURL: uploadResultURL.url,
-        imageAssetID: uploadResultURL.asset_id,
+        images: uploadArr,
         UserId: userId,
       });
 
@@ -79,7 +95,7 @@ export class PetController {
   }
 
   public static async updatePetReport(
-    data: { [key: string]: string | boolean },
+    data: { [key: string]: string | boolean | string[] },
     petId: string
   ) {
     try {
@@ -87,21 +103,22 @@ export class PetController {
       if (!pet) {
         throw new Error("Pet not found");
       }
-      console.log(pet);
 
-      const dataURI = data["imageDataURI"] as string;
-      let uploadResultURL: any = {};
-      uploadResultURL!.url = pet.dataValues.imageURL;
-      uploadResultURL!.asset_id = pet.dataValues.imageAssetID;
+      const arrDataURI = data["arrDataURI"] as string[];
+      // Guardo el dato actual
+      let uploadArr: {
+        url: string;
+        public_id: string;
+      }[] = (pet as any).images as { url: string; public_id: string }[];
 
-      console.log(uploadResultURL);
-
-      if (dataURI) {
-        uploadResultURL = await uploadProfilePic(dataURI);
-        if (!uploadResultURL) {
+      if (arrDataURI) {
+        uploadArr = await uploadPetsPics(arrDataURI);
+        if (!uploadArr) {
           throw new Error("Failed to upload image");
         }
-        await destroyProfilePic(pet.dataValues.imageAssetID);
+
+        // Destruyo si no falla la carga de imagenes nuevas
+        await destroyPetsPics(pet.dataValues.images);
       }
 
       const newData = {
@@ -109,11 +126,11 @@ export class PetController {
         type_pet: data.type_pet,
         age: data.age,
         size: data.size,
-        lat: data.lat,
-        lng: data.lng,
+        lat: data.lat.toString(),
+        lng: data.lng.toString(),
         location: data.location,
-        imageURL: uploadResultURL!.url,
-        imageAssetID: uploadResultURL!.asset_id,
+        description: data.description,
+        images: uploadArr,
       };
 
       await Pet.update(newData, {
@@ -122,7 +139,12 @@ export class PetController {
         },
       });
 
-      const petUpdated = await updateInAlgolia(petId, newData);
+      const _geoloc = {
+        lat: parseFloat(newData.lat as string),
+        lng: parseFloat(newData.lng as string),
+      };
+
+      const petUpdated = await updateInAlgolia(petId, _geoloc);
 
       if (!petUpdated) {
         throw new Error("Error creating pet report");
@@ -131,5 +153,31 @@ export class PetController {
     } catch (error) {
       throw error;
     }
+  }
+
+  public static async changeStatusPet(id: number) {
+    const pet = await Pet.findByPk(id);
+    if (!pet) {
+      throw new Error("Pet not found");
+    }
+
+    if (pet.dataValues.status === "find") {
+      return await Pet.update(
+        { status: "lost" },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+    }
+    return await Pet.update(
+      { status: "find" },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
   }
 }
